@@ -1,0 +1,69 @@
+/* Write your global styles here, in PostCSS syntax */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+	/* Reference name */
+	font-family: 'Orbitron';
+	/* For multiple files use commas, ex: url(), url(), ... */
+	src: url('/fonts/Orbitron/Orbitron-VariableFont_wght.ttf');
+}
+
+:root [data-theme='crimson'] {
+	--theme-font-family-base: 'Orbitron', sans-serif;
+	--theme-font-family-heading: 'Orbitron', sans-serif;
+	/* ... */
+}
+
+html,
+body {
+	@apply h-full overflow-hidden;
+}
+
+body {
+	background-image: radial-gradient(
+			at 0% 0%,
+			rgba(var(--color-secondary-500) / 0.33) 0px,
+			transparent 50%
+		),
+		radial-gradient(at 98% 1%, rgba(var(--color-error-500) / 0.33) 0px, transparent 50%);
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+p {
+	@apply leading-7 tracking-wider;
+}
+
+.permalink {
+	text-decoration: none;
+	font-size: 18px;
+}
+.text-neon {
+	@apply text-primary-200 [text-shadow:0_0_2px_#ffbdca,0_0_2px_#ffbdca,0_0_3px_#d5163d,0_0_10px_#d5163d,0_0_20px_#d5163d];
+}
+.neon {
+	@apply rounded-[30px] border !border-red-200  shadow-[0_0_2px_#ffbdca,inset_0_0_2px_#ffbdca,0_0_3px_#d5163d,0_0_10px_#d5163d,0_0_20px_#d5163d];
+}
+
+h1 {
+	@apply h1;
+}
+
+h2 {
+	@apply h2;
+}
+
+h3 {
+	@apply h3;
+}
+
+h4 {
+	@apply h4;
+}
+
+h5 {
+	@apply h5;
+}
