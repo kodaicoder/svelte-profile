@@ -1,7 +1,5 @@
 <script lang="ts">
-	import FooterBar from './../lib/components/layout/FooterBar.svelte';
-	import type ISocialLink from '$lib/types/ISocialLink';
-
+	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
 	import '../app.pcss';
 	import { AppShell, initializeStores } from '@skeletonlabs/skeleton';
 	import NavigationBar from '$lib/components/layout/NavigationBar.svelte';
@@ -12,6 +10,8 @@
 	import SideBar from '$lib/components/layout/SideBar.svelte';
 
 	import ToTopButton from '$lib/components/generic/ToTopButton.svelte';
+
+	injectSpeedInsights();
 
 	let windowWidth: number;
 	$: isMobileStore.set(windowWidth < 1024);
