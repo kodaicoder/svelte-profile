@@ -20,7 +20,7 @@
 	});
 </script>
 
-<section id="hero" class="relative flex h-screen snap-start flex-col">
+<section id="hero" class="relative flex h-dvh snap-start flex-col">
 	<div
 		class="flex h-full flex-col flex-wrap items-center justify-center gap-6 lg:flex-row-reverse lg:items-end lg:justify-around lg:gap-0"
 	>
@@ -54,7 +54,7 @@
 	</div>
 </section>
 
-<section id="skill" class="relative flex h-screen snap-start flex-col py-6">
+<section id="skill" class="relative flex h-dvh snap-start flex-col py-6">
 	<div class="flex items-center justify-center gap-6">
 		<h1 class="h1 whitespace-nowrap text-center">
 			<NeonText>#</NeonText>&nbsp;Skill
@@ -73,7 +73,7 @@
 	</div>
 </section>
 
-<section id="project" class="relative flex h-screen snap-start flex-col py-6">
+<section id="project" class="relative flex h-dvh snap-start flex-col py-6">
 	<div class="flex items-center justify-center gap-6">
 		<hr class="neon w-1/2 animate-pulse" />
 		<h1 class="h1 whitespace-nowrap text-center">
@@ -92,7 +92,7 @@
 	</div>
 </section>
 
-<section id="article" class="relative flex h-screen snap-start flex-col py-6">
+<section id="article" class="relative flex h-dvh snap-start flex-col py-6">
 	<div class="flex items-center justify-center gap-6">
 		<h1 class="h1 whitespace-nowrap text-center">
 			<NeonText>#</NeonText>&nbsp;Article
@@ -111,7 +111,7 @@
 	</div>
 </section>
 
-<section id="aboutme" class="relative flex h-screen snap-end flex-col py-6">
+<section id="aboutme" class="relative flex h-dvh snap-end flex-col py-6">
 	<div class="mb-4 flex w-full items-center justify-center gap-6">
 		<hr class="neon w-1/2 animate-pulse" />
 		<h1 class="h1 flex whitespace-nowrap text-center">
