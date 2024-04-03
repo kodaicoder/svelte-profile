@@ -10,8 +10,14 @@
 	import FooterBar from '$lib/components/layout/FooterBar.svelte';
 	import MottoBlock from '$lib/components/generic/MottoBlock.svelte';
 	import { mottoStore } from '$lib/stores/MottoStore';
+	import { onMount } from 'svelte';
+	import axios from 'axios';
 
 	const socialLinkList = $socialLinkStore;
+	onMount(async () => {
+		const allUsers = await axios.get('./api/users');
+		console.log(allUsers);
+	});
 </script>
 
 <section id="hero" class="relative flex h-screen snap-start flex-col">
