@@ -123,7 +123,7 @@
 			<img
 				src={aboutMeImage}
 				alt="neon style developer"
-				class="hidden size-[300px] justify-self-center overflow-hidden rounded-full object-cover object-left-top lg:block"
+				class="hidden size-[150px] justify-self-center overflow-hidden rounded-full object-cover object-left-top lg:block"
 			/>
 			<p class="text-surface-800-100-token text-base md:text-xl">
 				Hello, my name is Nutchapon Makelai. I'm a full stack developer at Thai Beverage Plc for 5
