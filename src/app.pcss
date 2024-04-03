@@ -41,9 +41,19 @@ p {
 	text-decoration: none;
 	font-size: 18px;
 }
-.text-neon {
-	@apply text-primary-200 [text-shadow:0_0_2px_#ffbdca,0_0_2px_#ffbdca,0_0_3px_#d5163d,0_0_10px_#d5163d,0_0_20px_#d5163d];
+
+.button-neon > * {
+	@apply text-neon;
 }
+
+.text-neon {
+	@apply text-primary-100 [text-shadow:0_0_2px_#ffbdca,0_0_2px_#ffbdca,0_0_3px_#d5163d,0_0_10px_#d5163d,0_0_20px_#d5163d];
+}
+
+.hover\:text-neon:hover {
+	@apply text-neon;
+}
+
 .neon {
 	@apply rounded-[30px] border !border-red-200  shadow-[0_0_2px_#ffbdca,inset_0_0_2px_#ffbdca,0_0_3px_#d5163d,0_0_10px_#d5163d,0_0_20px_#d5163d];
 }

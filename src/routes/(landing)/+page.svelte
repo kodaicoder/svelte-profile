@@ -1,5 +1,5 @@
 <script lang="ts">
-	import DownloadIcon from './../lib/components/icons/DownloadIcon.svelte';
+	import DownloadIcon from '$lib/components/icons/DownloadIcon.svelte';
 	import NeonText from '$lib/components/generic/NeonText.svelte';
 	import NextSectionButton from '$lib/components/generic/NextSectionButton.svelte';
 	import { Avatar } from '@skeletonlabs/skeleton';
@@ -15,8 +15,8 @@
 
 	const socialLinkList = $socialLinkStore;
 	onMount(async () => {
-		const allUsers = await axios.get('./api/users');
-		console.log(allUsers);
+		//const allUsers = await axios.get('./api/users');
+		//console.log(allUsers);
 	});
 </script>
 

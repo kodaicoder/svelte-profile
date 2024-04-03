@@ -13,14 +13,18 @@
 	function menuClickHandler(event: Event) {
 		drawerStore.close();
 		isHamburgerMenuOpenStore.set(false);
+
+		const element = document.getElementById(menu.toLowerCase().replace(/\s/g, ''));
+		if (element) element.scrollIntoView({ behavior: 'smooth' });
 	}
 </script>
 
 <svelte:window bind:scrollY />
 <li>
-	<a
-		href={`#${menu.toLowerCase().replace(/\s/g, '')}`}
-		class="flex h-10 w-full items-center justify-center whitespace-nowrap text-white hover:text-red-500 md:h-6"
-		on:click={menuClickHandler}>{menu}</a
+	<button
+		class=" hover:text-neon flex h-10 w-full items-center justify-center whitespace-nowrap text-white md:h-6"
+		on:click={menuClickHandler}
 	>
+		{menu}
+	</button>
 </li>
