@@ -68,7 +68,7 @@
 		{/if}
 	</svelte:fragment>
 
-	<div class="mx-16">
+	<div class="mx-6 md:mx-24">
 		<slot {socialLinkList} />
 	</div>
 

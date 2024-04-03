@@ -24,14 +24,14 @@
 	<div
 		class="flex h-full flex-col flex-wrap items-center justify-center gap-6 lg:flex-row-reverse lg:items-end lg:justify-around lg:gap-0"
 	>
-		<div class="relative">
+		<div class="relative mt-auto">
 			<Avatar
 				src={heroImage}
-				width="size-40 md:size-52 lg:size-80"
+				width="size-40 md:size-52 lg:size-72"
 				rounded="!rounded-full"
 				alt="Nutchapon Makelai"
 			/>
-			<div class=" neon absolute top-0 size-40 animate-pulse !rounded-full md:size-52 lg:size-80" />
+			<div class=" neon absolute top-0 size-40 animate-pulse !rounded-full md:size-52 lg:size-72" />
 		</div>
 		<div
 			class="flex flex-col items-center justify-center *:leading-[3rem] lg:items-start lg:*:leading-[5rem]"
@@ -44,7 +44,7 @@
 			</h3>
 			<h2 class="lg:ml-28">I'm&nbsp;&nbsp;full-stack&nbsp;&nbsp;developer</h2>
 		</div>
-		<div class="h-28 w-full self-center lg:w-2/5">
+		<div class="mb-[8vh] mt-auto h-28 self-center md:mb-[4vh] md:w-3/5">
 			<MottoBlock mottoList={$mottoStore} />
 		</div>
 	</div>
@@ -111,29 +111,28 @@
 	</div>
 </section>
 
-<section id="aboutme" class="relative flex h-screen snap-start flex-col gap-6 py-6">
-	<div class="flex w-full items-center justify-center gap-6">
+<section id="aboutme" class="relative flex h-screen snap-end flex-col py-6">
+	<div class="mb-4 flex w-full items-center justify-center gap-6">
 		<hr class="neon w-1/2 animate-pulse" />
 		<h1 class="h1 flex whitespace-nowrap text-center">
 			<NeonText>#</NeonText>&nbsp;About me
 		</h1>
 	</div>
-	<div class="section-content px-4 md:px-36">
-		<div class="grid grid-cols-1 items-center justify-center gap-8 lg:grid-cols-2">
+	<div class="section-content flex flex-col items-center justify-center gap-6 px-4 md:px-36">
+		<div class="grid grid-cols-1 items-center justify-center lg:grid-cols-2">
 			<img
 				src={aboutMeImage}
 				alt="neon style developer"
-				class="hidden size-[150px] justify-self-center overflow-hidden rounded-full object-cover object-left-top lg:block"
+				class="hidden size-[250px] justify-self-center overflow-hidden rounded-full object-cover object-left-top lg:block"
 			/>
-			<p class="text-surface-800-100-token text-base md:text-xl">
+			<p class="text-surface-800-100-token text-sm lg:text-lg">
 				Hello, my name is Nutchapon Makelai. I'm a full stack developer at Thai Beverage Plc for 5
 				Years now. I'm a self-taught developer based in Pathumthani, Thailand. <br />I can
 				developing a reactive website that compatible with all devices and screen sizes. I'm a fast
 				learner and always eager to learn new web technologies.
 			</p>
 		</div>
-	</div>
-	<div class="flex flex-col items-center gap-8">
+
 		<h3>Let work together !</h3>
 		<button type="button" class="variant-filled-primary btn flex w-fit gap-4">
 			<DownloadIcon class="w-8" />
