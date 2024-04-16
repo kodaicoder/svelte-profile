@@ -10,7 +10,7 @@
 
 	const drawerStore: DrawerStore = getDrawerStore();
 
-	function menuClickHandler(event: Event) {
+	function menuClickHandler() {
 		drawerStore.close();
 		isHamburgerMenuOpenStore.set(false);
 

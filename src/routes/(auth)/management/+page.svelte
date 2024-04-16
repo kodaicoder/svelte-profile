@@ -1,8 +1,6 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-
-	export let data: PageData;
+	import { readable } from 'svelte/store';
+	import { enhance } from '$app/forms';
 </script>
 
-<h1>HELLO WORLD</h1>
-<h2>SUPPOSE TO BE LOGIN PAGE</h2>
+<h1>This must be management selection menu</h1>

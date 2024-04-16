@@ -1,4 +1,5 @@
 import { join } from 'path';
+import forms from '@tailwindcss/forms';
 // 1. Import the Skeleton plugin
 import { skeleton } from '@skeletonlabs/tw-plugin';
 
@@ -17,6 +18,7 @@ export default {
 		extend: {}
 	},
 	plugins: [
+		forms,
 		// 4. Append the Skeleton plugin (after other plugins)
 		skeleton({
 			themes: { preset: [{ name: "crimson", enhancements: true }] }

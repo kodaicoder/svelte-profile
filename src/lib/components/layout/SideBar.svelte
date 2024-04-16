@@ -3,14 +3,16 @@
 
 	import { Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
 	import { Hamburger } from 'svelte-hamburgers';
-	import SocialLink from '../generic/SocialLink.svelte';
+	import SocialLink from '$lib/components/generic/SocialLink.svelte';
 	import { isHamburgerMenuOpenStore } from '$lib/stores/IsHamburgerMenuOpenStore';
 
 	import type ISocialLink from '$lib/types/ISocialLink';
-	import MenuLink from '../generic/MenuLink.svelte';
+	import MenuLink from '$lib/components/generic/MenuLink.svelte';
+	import LogoutButton from '$lib/components/generic/LogoutButton.svelte';
 
 	export let menuList: string[];
-	export let socialLinkList: ISocialLink[];
+	export let socialLinkList: ISocialLink[] = [];
+	export let isAuth: boolean = false;
 
 	const drawerStore: DrawerStore = getDrawerStore();
 	const drawerSettings: DrawerSettings = {
@@ -48,6 +50,9 @@
 					<SocialLink {socialLink} />
 				{/each}
 			</ul>
+			{#if isAuth}
+				<LogoutButton />
+			{/if}
 		</div>
 	{/if}
 </Drawer>

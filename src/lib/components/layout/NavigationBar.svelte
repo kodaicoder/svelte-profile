@@ -2,18 +2,20 @@
 	import type ISocialLink from '$lib/types/ISocialLink';
 
 	import { slide } from 'svelte/transition';
-	import { AppBar, LightSwitch } from '@skeletonlabs/skeleton';
+	import { AppBar } from '@skeletonlabs/skeleton';
 	import SocialLink from '$lib/components/generic/SocialLink.svelte';
 	import MenuLink from '$lib/components/generic/MenuLink.svelte';
 	import { isMobileStore } from '$lib/stores/IsMobileStore';
 	import { isHamburgerMenuOpenStore } from '$lib/stores/IsHamburgerMenuOpenStore';
 	import { Hamburger } from 'svelte-hamburgers';
+	import LogoutButton from '$lib/components/generic/LogoutButton.svelte';
 
 	$: if (!$isMobileStore) isHamburgerMenuOpenStore.set(false);
 
 	let windowWidth: number;
 	export let menuList: string[];
-	export let socialLinkList: ISocialLink[];
+	export let socialLinkList: ISocialLink[] = [];
+	export let isAuth: boolean = false;
 </script>
 
 <svelte:window bind:outerWidth={windowWidth} />
@@ -42,10 +44,13 @@
 		<svelte:fragment slot="trail">
 			{#if !$isMobileStore && windowWidth > 1200}
 				<ul class="flex gap-8">
-					{#each socialLinkList as socialLink, idx}
+					{#each socialLinkList as socialLink}
 						<SocialLink {socialLink} />
 					{/each}
 				</ul>
+				{#if isAuth}
+					<LogoutButton />
+				{/if}
 			{/if}
 			{#if $isMobileStore}
 				<Hamburger

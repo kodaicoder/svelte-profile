@@ -13,28 +13,92 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
+model Skill{
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String   @db.VarChar(255)
-  content   String?
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+  userId   Int
+  user     User     @relation(fields: [userId], references: [id])
+  name      String   @db.VarChar(255)
+  level     Float
+  images SkillImage[]
 }
 
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  user   User    @relation(fields: [userId], references: [id])
-  userId Int     @unique
+model SkillImage{
+  id        Int      @id @default(autoincrement())
+  url       String
+  skillId   Int
+  skill     Skill    @relation(fields: [skillId], references: [id])
+    isActive Boolean @default(true)
+}
+
+model Article {
+  id        Int      @id @default(autoincrement())
+  userId   Int
+  user     User     @relation(fields: [userId], references: [id])
+  title     String   @db.VarChar(255)
+  content   String
+  images AritcleImage[]
+  link      String
+}
+
+model AritcleImage {
+  id      Int      @id @default(autoincrement())
+  url     String
+  articleId Int
+  article   Article @relation(fields: [articleId], references: [id])
+  isActive Boolean @default(true)
+}
+
+model Project{
+  id        Int      @id @default(autoincrement())
+  userId   Int
+  user     User     @relation(fields: [userId], references: [id])
+  title     String   @db.VarChar(255)
+  content   String?
+  images ProjectImage[]
+  sourceLink  String
+  link      String?
+}
+
+model ProjectImage{
+  id      Int      @id @default(autoincrement())
+  url     String
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id])
+  isActive Boolean @default(true)
 }
 
 model User {
   id      Int      @id @default(autoincrement())
   email   String   @unique
-  name    String?
-  posts   Post[]
-  profile Profile?
+  password String
+  firstName    String?
+  lastName    String?
+  images UserImage[]
+  sessions Session[]
+  role String @default("USER")
+
+  userProject Project[]
+  userArticle Article[]
+  userSkill Skill[]
+}
+
+model UserImage{
+  id      Int      @id @default(autoincrement())
+  url     String
+  userId    Int
+  user      User   @relation(fields: [userId], references: [id])
+  isActive Boolean @default(true)
+}
+
+model Session {
+  id        String   @id
+  userId    Int
+  expiresAt DateTime
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model Motto {
+  id      Int      @id @default(autoincrement())
+  content String   @db.VarChar(1000)
+  author  String?  @db.VarChar(250)
 }

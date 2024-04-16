@@ -1,4 +1,3 @@
-import { all } from 'axios';
 import type { RequestHandler } from './$types';
 import { PrismaClient } from '@prisma/client';
 

@@ -1,21 +1,17 @@
 <script lang="ts">
 	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
-	import { AppShell, initializeStores } from '@skeletonlabs/skeleton';
+	import { AppShell } from '@skeletonlabs/skeleton';
 	import NavigationBar from '$lib/components/layout/NavigationBar.svelte';
-	import { isMobileStore } from '$lib/stores/IsMobileStore';
+
 	import { isTopNavShowStore } from '$lib/stores/IsTopNavShowStore';
 	import { socialLinkStore } from '$lib/stores/SocialLinkStore';
 	import { mottoStore } from '$lib/stores/MottoStore';
 	import SideBar from '$lib/components/layout/SideBar.svelte';
 
 	import ToTopButton from '$lib/components/generic/ToTopButton.svelte';
+	import { onMount } from 'svelte';
 
 	injectSpeedInsights();
-
-	let windowWidth: number;
-	$: isMobileStore.set(windowWidth < 1024);
-
-	initializeStores();
 
 	const menuList: string[] = ['Skill', 'Article', 'Project', 'About Me'];
 	const socialLinkList = $socialLinkStore;
@@ -51,13 +47,15 @@
 		// isTopNavShowStore.set(currentFromTop < previousFromTop);
 		previousFromTop = currentFromTop;
 	}
-</script>
 
-<svelte:window bind:outerWidth={windowWidth} />
+	onMount(() => {
+		isTopNavShowStore.set(true);
+	});
+</script>
 
 <SideBar {menuList} {socialLinkList} />
 <AppShell
-	regionPage="scroll-smooth snap-y snap-mandatory"
+	regionPage="scroll-smooth snap-y  snap-mandatory"
 	slotPageHeader="fixed top-1 left-1 z-20 m-1 mb-3 w-full pr-4 md:pr-8"
 	on:scroll={scrollEventHandler}
 >
