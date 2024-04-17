@@ -19,7 +19,7 @@
 	</div>
 	<div class="flex w-full flex-1 flex-col gap-4">
 		<h1>{cardData.title}</h1>
-		<p class="max-h-[25vh] flex-1 overflow-auto sm:max-h-[40vh] md:max-h-[45vh]">
+		<p class="max-h-[30dvh] flex-1 overflow-auto md:max-h-[45dvh]">
 			{cardData.content}
 		</p>
 		<div class="mt-auto flex w-full items-center justify-between">
