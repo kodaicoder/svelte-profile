@@ -333,7 +333,7 @@
 			<NeonText>#</NeonText>&nbsp;Project
 		</h1>
 	</div>
-	<div class="section-content flex h-full flex-col">
+	<div class="section-content flex flex-auto flex-col">
 		<CarouselWithSearch cardDatas={projectDatas} />
 	</div>
 	<div class="mb-2 flex w-full justify-center">

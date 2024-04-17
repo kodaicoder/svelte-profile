@@ -12,7 +12,10 @@
 	$: splideOption = {
 		rewind: true,
 		gap: '4rem',
-		padding: { left: $isMobileStore ? '0' : '4rem', right: $isMobileStore ? '0' : '4rem' },
+		padding: {
+			left: $isMobileStore ? '0' : '4rem',
+			right: $isMobileStore ? '0' : '4rem'
+		},
 		arrows: !$isMobileStore
 	};
 
@@ -31,7 +34,7 @@
 </script>
 
 <input
-	class="input mx-auto mb-4 w-full md:mx-12 md:ml-16 md:w-60"
+	class="input mx-auto mb-2 h-8 w-full placeholder:text-sm md:mx-12 md:ml-16 md:w-60"
 	title="Input (search)"
 	type="search"
 	placeholder="Search title ..."

@@ -16,73 +16,80 @@
 	/* ... */
 }
 
-html,
-body {
-	@apply h-full overflow-hidden;
-}
+@layer components {
+	html,
+	body {
+		@apply h-full overflow-hidden;
+	}
 
-body {
-	background-image: radial-gradient(
-			at 0% 0%,
-			rgba(var(--color-secondary-500) / 0.33) 0px,
-			transparent 50%
-		),
-		radial-gradient(at 98% 1%, rgba(var(--color-error-500) / 0.33) 0px, transparent 50%);
-	background-attachment: fixed;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-p {
-	@apply leading-7 tracking-wider;
-}
+	body {
+		background-image: radial-gradient(
+				at 0% 0%,
+				rgba(var(--color-secondary-500) / 0.33) 0px,
+				transparent 50%
+			),
+			radial-gradient(at 98% 1%, rgba(var(--color-error-500) / 0.33) 0px, transparent 50%);
+		background-attachment: fixed;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+	p {
+		@apply leading-7 tracking-wider;
+	}
 
-.permalink {
-	text-decoration: none;
-	font-size: 18px;
-}
+	.permalink {
+		text-decoration: none;
+		font-size: 18px;
+	}
 
-.button-neon > * {
-	@apply text-neon;
-}
+	.button-neon > * {
+		@apply text-neon;
+	}
 
-.text-neon {
-	@apply text-primary-100 [text-shadow:0_0_2px_#ffbdca,0_0_2px_#ffbdca,0_0_3px_#d5163d,0_0_10px_#d5163d,0_0_20px_#d5163d];
-}
+	.text-neon {
+		@apply text-primary-100 [text-shadow:0_0_2px_#ffbdca,0_0_2px_#ffbdca,0_0_3px_#d5163d,0_0_10px_#d5163d,0_0_20px_#d5163d];
+	}
 
-.hover\:text-neon:hover {
-	@apply text-neon;
-}
+	.hover\:text-neon:hover {
+		@apply text-neon;
+	}
 
-.neon {
-	@apply rounded-[30px] border !border-red-200  shadow-[0_0_2px_#ffbdca,inset_0_0_2px_#ffbdca,0_0_3px_#d5163d,0_0_10px_#d5163d,0_0_20px_#d5163d];
-}
+	.svg-neon {
+		filter: drop-shadow(0 0 2px #ffbdca) drop-shadow(0 0px 3px #d5163d)
+			drop-shadow(0 0px 20px #d5163d);
+	}
 
-h1 {
-	@apply h1;
-}
+	.neon {
+		@apply rounded-[30px] border !border-red-200  shadow-[0_0_2px_#ffbdca,inset_0_0_2px_#ffbdca,0_0_3px_#d5163d,0_0_10px_#d5163d,0_0_20px_#d5163d];
+	}
 
-h2 {
-	@apply h2;
-}
+	h1 {
+		@apply h1;
+	}
 
-h3 {
-	@apply h3;
-}
+	h2 {
+		@apply h2;
+	}
 
-h4 {
-	@apply h4;
-}
+	h3 {
+		@apply h3;
+	}
 
-h5 {
-	@apply h5;
+	h4 {
+		@apply h4;
+	}
+
+	h5 {
+		@apply h5;
+	}
+
+	input[aria-invalid='true'] {
+		@apply !border-2 !border-primary-500;
+	}
 }
 
 .splide,
 .splide__track {
-	@apply flex-1;
-}
-
-input[aria-invalid='true'] {
-	@apply !border-2 !border-primary-500;
+	@apply h-[95%] flex-auto;
 }
