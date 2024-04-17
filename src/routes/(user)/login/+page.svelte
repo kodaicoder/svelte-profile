@@ -94,7 +94,7 @@
 			<div class="grid grid-cols-2 grid-rows-2 gap-6">
 				<button
 					type="submit"
-					class="btn variant-gradient-tertiary-secondary col-span-2 flex-1 bg-gradient-to-br"
+					class="variant-filled-success btn col-span-2 flex-1 bg-gradient-to-br hover:bg-success-400"
 					disabled={buttonLoadState}
 				>
 					{#if buttonLoadState}

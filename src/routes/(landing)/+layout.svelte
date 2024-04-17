@@ -7,7 +7,7 @@
 
 	import { isTopNavShowStore } from '$lib/stores/IsTopNavShowStore';
 	import { socialLinkStore } from '$lib/stores/SocialLinkStore';
-	import { mottoStore } from '$lib/stores/MottoStore';
+
 	import SideBar from '$lib/components/layout/SideBar.svelte';
 
 	import ToTopButton from '$lib/components/generic/ToTopButton.svelte';
@@ -24,18 +24,6 @@
 		{ text: 'About Me' }
 	];
 	const socialLinkList = $socialLinkStore;
-	mottoStore.set([
-		'"Make it work, make it right, make it fast." - Kent Beck',
-		'"Code is like humor. When you have to explain it, it\'s bad." - Cory House',
-		'"Before software can be reusable it first has to be usable." - Ralph Johnson',
-		'"Fix the cause, not the symptom." - Steve Maguire',
-		'"Good code is its own best documentation." - Steve McConnell',
-		'"Code never lies, comments sometimes do." - Ron Jeffries',
-		'"Don\'t repeat yourself." - Andrew Hunt and David Thomas',
-		'"Simplicity is the ultimate sophistication." - Leonardo da Vinci',
-		'"Programming isn\'t about what you know; it\'s about what you can figure out." - Chris Pine'
-	]);
-
 	let previousFromTop = 0;
 	let isShowToTopButton = false;
 

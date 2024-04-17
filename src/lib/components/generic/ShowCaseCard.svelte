@@ -12,7 +12,7 @@
 	<img
 		src={cardData.images[0]}
 		alt={cardData.title}
-		class="h-40 rounded-xl object-cover md:size-auto"
+		class="h-36 rounded-xl object-cover md:size-auto"
 		class:order-1={imagePosition == 'right' && !$isMobileStore}
 	/>
 

@@ -11,7 +11,6 @@
 	import { socialLinkStore } from '$lib/stores/SocialLinkStore';
 	import FooterBar from '$lib/components/layout/FooterBar.svelte';
 	import MottoBlock from '$lib/components/generic/MottoBlock.svelte';
-	import { mottoStore } from '$lib/stores/MottoStore';
 	import CarouselWithSearch from '$lib/components/generic/CarouselWithSearch.svelte';
 	import LogoutButton from '$lib/components/generic/LogoutButton.svelte';
 	import { goto, invalidateAll } from '$app/navigation';
@@ -301,8 +300,8 @@
 			</h3>
 			<h2 class="lg:ml-28">I'm&nbsp;&nbsp;full-stack&nbsp;&nbsp;developer</h2>
 		</div>
-		<div class="mb-[8vh] mt-auto h-28 self-center md:mb-[4vh] md:w-3/5">
-			<MottoBlock mottoList={$mottoStore} />
+		<div class="mb-[8vh] mt-auto h-28 self-center md:mb-[6vh] md:w-3/5">
+			<MottoBlock />
 		</div>
 	</div>
 

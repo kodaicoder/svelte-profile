@@ -11,6 +11,9 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+	interface Window {
+		refreshTable: () => void;
+	}
 }
 
 export {};

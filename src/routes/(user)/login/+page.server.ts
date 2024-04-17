@@ -34,7 +34,7 @@ export const actions: Actions = {
 		const { email, password } = form.data;
 
 		const user = await axios
-			.post('./api/users/getUserByEmail/', {
+			.post('/api/users/getUserByEmail/', {
 				email
 			})
 			.then((response: AxiosResponse<{ user: User }>) => {
