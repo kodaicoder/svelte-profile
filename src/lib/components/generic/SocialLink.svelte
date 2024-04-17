@@ -11,6 +11,6 @@
 		rel="noopener noreferrer"
 		class="flex h-6 w-6 items-center justify-center"
 	>
-		<svelte:component this={socialLink.icon} />
+		<svelte:component this={socialLink.icon} class="hover:svg-neon fill-on-surface-token" />
 	</a>
 </li>

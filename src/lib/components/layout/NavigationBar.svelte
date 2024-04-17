@@ -1,5 +1,7 @@
 <script lang="ts">
+	import GearIcon from './../icons/GearIcon.svelte';
 	import type ISocialLink from '$lib/types/ISocialLink';
+	import type IMenu from '$lib/types/IMenu';
 
 	import { slide } from 'svelte/transition';
 	import { AppBar } from '@skeletonlabs/skeleton';
@@ -13,7 +15,8 @@
 	$: if (!$isMobileStore) isHamburgerMenuOpenStore.set(false);
 
 	let windowWidth: number;
-	export let menuList: string[];
+	export let isAdmin: boolean = false;
+	export let menuList: IMenu[];
 	export let socialLinkList: ISocialLink[] = [];
 	export let isAuth: boolean = false;
 </script>
@@ -23,7 +26,7 @@
 	<AppBar
 		gridColumns="grid-cols-3"
 		slotDefault="place-self-center"
-		slotLead="place-content-start ml-4 min-w-72"
+		slotLead=" ml-4 min-w-72 !justify-start"
 		slotTrail="place-content-end mr-4"
 		padding="p-3 md:p-4"
 		border="neon"
@@ -32,10 +35,15 @@
 			<h4 class="tracking-widest">
 				{@html `<span class="text-2xl font-extrabold text-primary-500 leading-3">|<</span>odai Coder`}
 			</h4>
+			{#if isAdmin}
+				<a href="/management" class="ml-4 h-8 w-8" title="go to management">
+					<GearIcon class="hover:svg-neon" />
+				</a>
+			{/if}
 		</svelte:fragment>
 		{#if !$isMobileStore && windowWidth > 0}
 			<ul class="flex gap-16">
-				{#each menuList as menu, idx}
+				{#each menuList as menu}
 					<MenuLink {menu} />
 				{/each}
 			</ul>

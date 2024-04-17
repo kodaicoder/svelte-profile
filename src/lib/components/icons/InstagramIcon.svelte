@@ -1,11 +1,4 @@
-<svg
-	xmlns="http://www.w3.org/2000/svg"
-	width="100%"
-	height="100%"
-	viewBox="2 2 20 20"
-	class="fill-on-surface-token hover:fill-primary-500"
-	{...$$props}
->
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="2 2 20 20" {...$$props}>
 	<path
 		d="M11.999 7.377a4.623 4.623 0 1 0 0 9.248a4.623 4.623 0 0 0 0-9.248m0 7.627a3.004 3.004 0 1 1 0-6.008a3.004 3.004 0 0 1 0 6.008"
 	/>

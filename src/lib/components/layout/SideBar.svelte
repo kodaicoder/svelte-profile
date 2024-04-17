@@ -1,16 +1,17 @@
 <script lang="ts">
 	import type { DrawerSettings, DrawerStore } from '@skeletonlabs/skeleton';
+	import type ISocialLink from '$lib/types/ISocialLink';
+	import type IMenu from '$lib/types/IMenu';
 
 	import { Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
 	import { Hamburger } from 'svelte-hamburgers';
 	import SocialLink from '$lib/components/generic/SocialLink.svelte';
 	import { isHamburgerMenuOpenStore } from '$lib/stores/IsHamburgerMenuOpenStore';
 
-	import type ISocialLink from '$lib/types/ISocialLink';
 	import MenuLink from '$lib/components/generic/MenuLink.svelte';
 	import LogoutButton from '$lib/components/generic/LogoutButton.svelte';
 
-	export let menuList: string[];
+	export let menuList: IMenu[];
 	export let socialLinkList: ISocialLink[] = [];
 	export let isAuth: boolean = false;
 

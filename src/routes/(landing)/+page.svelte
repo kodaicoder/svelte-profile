@@ -316,7 +316,7 @@
 		<h1 class="h1 whitespace-nowrap text-center">
 			<NeonText>#</NeonText>&nbsp;Skill
 		</h1>
-		<hr class="neon w-1/2 animate-pulse" />
+		<hr class="neon w-1/2" />
 	</div>
 	<div class="section-content my-4 mb-12 h-full overflow-y-auto px-4">
 		<Skills {skillDatas} />
@@ -328,7 +328,7 @@
 
 <section id="project" class="relative flex h-dvh snap-start snap-always flex-col gap-2 pt-4">
 	<div class="flex items-center justify-center gap-6">
-		<hr class="neon w-1/2 animate-pulse" />
+		<hr class="neon w-1/2" />
 		<h1 class="h1 whitespace-nowrap text-center">
 			<NeonText>#</NeonText>&nbsp;Project
 		</h1>
@@ -346,7 +346,7 @@
 		<h1 class="h1 whitespace-nowrap text-center">
 			<NeonText>#</NeonText>&nbsp;Article
 		</h1>
-		<hr class="neon w-1/2 animate-pulse" />
+		<hr class="neon w-1/2" />
 	</div>
 	<div class="section-content flex h-full flex-col">
 		<CarouselWithSearch cardDatas={articleDatas} imagePosition="right" />
@@ -358,7 +358,7 @@
 
 <section id="aboutme" class="relative flex h-dvh snap-end snap-always flex-col py-4">
 	<div class="mb-4 flex w-full items-center justify-center gap-6">
-		<hr class="neon w-1/2 animate-pulse" />
+		<hr class="neon w-1/2" />
 		<h1 class="h1 flex whitespace-nowrap text-center">
 			<NeonText>#</NeonText>&nbsp;About me
 		</h1>

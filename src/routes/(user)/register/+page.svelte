@@ -3,28 +3,28 @@
 	import Spinner from '$lib/components/icons/Spinner.svelte';
 	import { goto } from '$app/navigation';
 	import { superForm } from 'sveltekit-superforms';
-	import { loginSchema } from '$lib/validators/loginSchema';
+	import { registerSchema } from '$lib/validators/registerSchema';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import ErrorMessage from '$lib/components/generic/ErrorMessage.svelte';
 	export let data;
 
 	let buttonLoadState = false;
 	const { form, enhance, errors } = superForm(data.form, {
-		validators: zod(loginSchema),
+		validators: zod(registerSchema),
 		onSubmit: () => {
 			buttonLoadState = true;
 		},
 		onUpdate: ({ form }) => {
 			if (Object.keys(form.errors).length === 0) {
 				Swal.fire({
-					title: 'Login success',
-					text: 'You will be redirect shortly',
+					title: 'Register success',
+					text: 'Your info has been saved successfully',
 					icon: 'success',
-					confirmButtonText: 'Ok',
+					confirmButtonText: 'Go to login',
 					allowOutsideClick: false
 				})
 					.then(() => {
-						goto(`${form.message.gotoLink}`);
+						goto('/login');
 					})
 					.catch((err) => {
 						console.log(err);
@@ -50,9 +50,9 @@
 	});
 </script>
 
-<div class="mt-4 grid place-content-center">
+<div class="grid place-content-center">
 	<div class="card flex flex-col gap-8 p-6">
-		<h1>Sign in</h1>
+		<h1>Sign up</h1>
 		<form method="POST" use:enhance class="contents">
 			<label class="label relative" for="email">
 				<span>Email</span>
@@ -90,7 +90,63 @@
 				{/if}
 			</label>
 
-			<div class="grid grid-cols-2 grid-rows-2 gap-6">
+			<label class="label relative" for="confirmPassword">
+				<span>Confirm Password</span>
+				<input
+					name="confirmPassword"
+					id="confirmPassword"
+					class="input"
+					title="Input confirm password"
+					type="password"
+					aria-invalid={$errors.confirmPassword ? 'true' : undefined}
+					bind:value={$form.confirmPassword}
+				/>
+				{#if $errors.confirmPassword}
+					<ErrorMessage
+						errorMessage={$errors.confirmPassword
+							? $errors.confirmPassword[$errors.confirmPassword.length - 1]
+							: ''}
+					/>
+				{/if}
+			</label>
+
+			<label class="label relative" for="firstName">
+				<span>First name</span>
+				<input
+					name="firstName"
+					id="firstName"
+					class="input"
+					title="Input first name"
+					type="text"
+					aria-invalid={$errors.firstName ? 'true' : undefined}
+					bind:value={$form.firstName}
+				/>
+				{#if $errors.firstName}
+					<ErrorMessage
+						errorMessage={$errors.firstName ? $errors.firstName[$errors.firstName.length - 1] : ''}
+					/>
+				{/if}
+			</label>
+
+			<label class="label relative" for="lastName">
+				<span>Last name</span>
+				<input
+					name="lastName"
+					id="lastName"
+					class="input"
+					title="Input last name"
+					type="text"
+					aria-invalid={$errors.lastName ? 'true' : undefined}
+					bind:value={$form.lastName}
+				/>
+				{#if $errors.lastName}
+					<ErrorMessage
+						errorMessage={$errors.lastName ? $errors.lastName[$errors.lastName.length - 1] : ''}
+					/>
+				{/if}
+			</label>
+
+			<div class="flex w-full gap-6">
 				<button
 					type="submit"
 					class="btn variant-gradient-tertiary-secondary flex-1 bg-gradient-to-br"
@@ -101,32 +157,14 @@
 							<Spinner />
 						</span>
 					{:else}
-						Login
-					{/if}
-				</button>
-
-				<button
-					type="button"
-					class="variant-ghost-success btn flex-1"
-					on:click={() => {
-						goto('/register');
-					}}
-					disabled={buttonLoadState}
-				>
-					{#if buttonLoadState}
-						<span class="h-4 w-4">
-							<Spinner />
-						</span>
-					{:else}
 						Register
 					{/if}
 				</button>
-
 				<button
 					type="button"
-					class="variant-ringed-error btn col-span-2 flex-1"
+					class="variant-ringed-error btn flex-1 hover:bg-error-500/10"
 					on:click={() => {
-						goto('/');
+						goto('/login');
 					}}
 					disabled={buttonLoadState}
 				>

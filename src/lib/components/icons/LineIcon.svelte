@@ -3,7 +3,6 @@
 	width="100%"
 	height="100%"
 	viewBox="0 0 512 512"
-	class="fill-on-surface-token hover:fill-primary-500"
 	{...$$props}
 >
 	<path

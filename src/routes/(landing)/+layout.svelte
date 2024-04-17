@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { LayoutData } from './$types';
+	import type IMenu from '$lib/types/IMenu';
 	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
 	import { AppShell } from '@skeletonlabs/skeleton';
 	import NavigationBar from '$lib/components/layout/NavigationBar.svelte';
@@ -13,7 +15,14 @@
 
 	injectSpeedInsights();
 
-	const menuList: string[] = ['Skill', 'Article', 'Project', 'About Me'];
+	export let data: LayoutData;
+
+	const menuList: IMenu[] = [
+		{ text: 'Skill' },
+		{ text: 'Article' },
+		{ text: 'Project' },
+		{ text: 'About Me' }
+	];
 	const socialLinkList = $socialLinkStore;
 	mottoStore.set([
 		'"Make it work, make it right, make it fast." - Kent Beck',
@@ -61,7 +70,7 @@
 >
 	<svelte:fragment slot="pageHeader">
 		{#if $isTopNavShowStore}
-			<NavigationBar {menuList} {socialLinkList} />
+			<NavigationBar {menuList} {socialLinkList} isAdmin={data.isAdmin} />
 		{/if}
 	</svelte:fragment>
 

@@ -36,20 +36,4 @@
 	{#each managementCardDatas as managementCardData}
 		<ManagementCard {managementCardData} />
 	{/each}
-	<!-- <button class="group card card-hover grid min-h-60 grid-flow-col place-content-center gap-4">
-		<ChatBubble class="group-hover:svg-neon size-12" />
-		<span class="group-hover:text-neon text-4xl">Manage Motto</span>
-	</button>
-	<button class=" card card-hover grid grid-flow-col place-content-center gap-4">
-		<CodeDocument class="size-12" />
-		<span class="text-4xl"> Manage Project </span>
-	</button>
-	<button class=" card card-hover">
-		<span> (ICON) </span>
-		<span class=" text-4xl">Manage Article</span></button
-	>
-	<button class=" card card-hover">
-		<span> (ICON) </span>
-		<span class=" text-4xl"> Manage Profile </span></button
-	> -->
 </div>
