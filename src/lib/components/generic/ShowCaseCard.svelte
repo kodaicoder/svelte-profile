@@ -9,14 +9,13 @@
 </script>
 
 <div class="card flex h-full flex-col gap-4 p-4 md:flex-row">
-	<div class="h-1/4 w-full md:size-full">
-		<img
-			src={cardData.images[0]}
-			alt={cardData.title}
-			class="h-full w-full rounded-xl object-cover"
-			class:order-1={imagePosition == 'right' && !$isMobileStore}
-		/>
-	</div>
+	<img
+		src={cardData.images[0]}
+		alt={cardData.title}
+		class="h-40 rounded-xl object-cover md:size-auto"
+		class:order-1={imagePosition == 'right' && !$isMobileStore}
+	/>
+
 	<div class="flex w-full flex-1 flex-col gap-4">
 		<h1>{cardData.title}</h1>
 		<p class="max-h-[30vh] flex-1 overflow-auto md:max-h-[45vh]">
