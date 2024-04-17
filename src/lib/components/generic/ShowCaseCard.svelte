@@ -9,11 +9,11 @@
 </script>
 
 <div class="card flex h-full flex-col gap-4 p-4 md:flex-row">
-	<div>
+	<div class="h-1/4 w-full md:size-full">
 		<img
 			src={cardData.images[0]}
 			alt={cardData.title}
-			class="h-1/4 w-full rounded-xl object-cover md:row-span-3 md:size-full"
+			class="h-full w-full rounded-xl object-cover"
 			class:order-1={imagePosition == 'right' && !$isMobileStore}
 		/>
 	</div>
