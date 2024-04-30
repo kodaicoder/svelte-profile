@@ -1,10 +1,13 @@
 import type { RequestHandler } from './$types';
 import { PrismaClient } from '@prisma/client';
+import type { IMotto } from '$lib/types/IMotto';
 
 const prisma = new PrismaClient();
 
 export const GET: RequestHandler = async () => {
-	const allMotto = await getAll()
+	let allMotto: IMotto[] | void = [];
+
+	allMotto = await dataAccess()
 		.then(async (data) => {
 			await prisma.$disconnect();
 			return data;
@@ -13,9 +16,10 @@ export const GET: RequestHandler = async () => {
 			console.error(e);
 			await prisma.$disconnect();
 		});
+
 	return new Response(JSON.stringify(allMotto));
 };
 
-async function getAll() {
+async function dataAccess() {
 	return await prisma.motto.findMany();
 }

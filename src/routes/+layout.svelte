@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { initializeStores } from '@skeletonlabs/skeleton';
+	import { initializeStores, Modal, type ModalComponent } from '@skeletonlabs/skeleton';
 	import { isMobileStore } from '$lib/stores/IsMobileStore';
 	import '../app.pcss';
 

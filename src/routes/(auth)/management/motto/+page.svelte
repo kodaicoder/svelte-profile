@@ -1,21 +1,157 @@
 <script lang="ts">
-	import { Tabulator } from 'tabulator-tables';
-	import type { PageData } from './$types';
+	import EditIcon from './../../../../lib/components/icons/EditIcon.svelte';
+	import type { IMotto } from '$lib/types/IMotto';
+	import type { CustomModalSettings } from '$lib/types/IModal';
+	import CreateModal from '$lib/components/generic/motto/CreateModal.svelte';
+	import EditModal from '$lib/components/generic/motto/EditModal.svelte';
+	import DeleteModal from '$lib/components/generic/motto/DeleteModal.svelte';
+	import RefreshIcon from '$lib/components/icons/RefreshIcon.svelte';
+	import { TabulatorFull as Tabulator, type CellComponent } from 'tabulator-tables';
 	import { onMount } from 'svelte';
+	import EditButton from '$lib/components/generic/motto/EditButton.svelte';
+	import DeleteButton from '$lib/components/generic/motto/DeleteButton.svelte';
+	import Spinner from '$lib/components/icons/Spinner.svelte';
+	import { Modal, getModalStore, type ModalComponent } from '@skeletonlabs/skeleton';
+	import {
+		mottoCreateSchema,
+		mottoUpdateSchema,
+		mottoDeleteSchema
+	} from '$lib/validators/mottoSchema.js';
+	import CreateButton from '$lib/components/generic/motto/CreateButton.svelte';
 
-	export let data: PageData;
-
-	let tableDiv: HTMLDivElement;
-	let tabulatorTable: Tabulator;
+	let tableDiv: string | HTMLElement;
+	let tabulatorTable: any;
 	let refreshState = false;
-	$: tableHeight = window.innerHeight - 178;
+
+	const modalStore = getModalStore(); //passing modal store to action components
+
+	const typeOfDataCreateMotto = {} as IMotto;
+	const typeOfDataEditMotto = {} as IMotto;
+	const typeOfDataDeleteMotto = {} as IMotto;
+
+	const createMottoMetaData = {
+		title: 'Create Motto',
+		form: {
+			name: 'createMotto',
+			method: 'POST',
+			action: './motto?/create',
+			children: [
+				{
+					name: 'content',
+					element: 'textarea',
+					type: 'textarea',
+					label: 'Content'
+				},
+				{
+					name: 'author',
+					element: 'input',
+					type: 'text',
+					label: 'Author name'
+				}
+			]
+		},
+		button: {
+			submit: {
+				label: 'Create'
+			},
+			cancel: {
+				label: 'Cancel'
+			}
+		},
+		swal: {
+			success: {
+				title: 'Create motto success',
+				text: 'Motto data has been save successfully'
+			},
+			error: {
+				title: 'Create motto failed'
+			}
+		}
+	};
+	const editMottoMetaData = {
+		title: 'Edit Motto',
+		form: {
+			name: 'editMotto',
+			method: 'POST',
+			action: './motto?/update',
+			children: [
+				{
+					name: 'id',
+					element: 'input',
+					type: 'hidden'
+				},
+				{
+					name: 'content',
+					element: 'textarea',
+					type: 'textarea',
+					label: 'Content'
+				},
+				{
+					name: 'author',
+					element: 'input',
+					type: 'text',
+					label: 'Author name'
+				}
+			]
+		},
+		button: {
+			submit: {
+				label: 'Update'
+			},
+			cancel: {
+				label: 'Cancel'
+			}
+		},
+		swal: {
+			success: {
+				title: 'Update motto success',
+				text: 'Motto data has been save successfully'
+			},
+			error: {
+				title: 'Update motto failed'
+			}
+		}
+	};
+	const deleteMottoMetaData = {
+		title: 'Delete Motto',
+		form: {
+			name: 'deleteMotto',
+			method: 'POST',
+			action: './motto?/delete',
+			children: [
+				{
+					name: 'id',
+					element: 'input',
+					type: 'hidden'
+				}
+			]
+		},
+		button: {
+			submit: {
+				label: 'Delete'
+			},
+			cancel: {
+				label: 'Cancel'
+			}
+		},
+		swal: {
+			success: {
+				title: 'Delete motto success',
+				text: 'Motto data has been remove successfully'
+			},
+			error: {
+				title: 'Delete motto failed'
+			}
+		}
+	};
 
 	onMount(() => {
 		tabulatorTable = new Tabulator(tableDiv, {
-			layout: 'fitDataStretch',
-			height: `${tableHeight}`,
+			layout: 'fitColumns',
+			height: 400,
 			rowHeight: 50,
 			selectable: false,
+			placeholder: 'Not found data',
 			pagination: true,
 			paginationMode: 'remote',
 			paginationSize: 10,
@@ -28,16 +164,23 @@
 				sorters: 'sort',
 				filter: 'filter'
 			},
-			ajaxURL: `/api/motto/getAllMotto`,
+			ajaxURL: `/api/motto/getMottoByParams`,
+			// ajaxResponse: function (url, params, response) {
+			// 	//url - the URL of the request
+			// 	//params - the parameters passed with the request
+			// 	//response - the JSON object returned in the body of the response.
+			// 	console.log(response);
+			// 	return response.tableData; //return the tableData property of a response json object
+			// },
 			columns: [
 				{
 					title: 'Id',
 					field: 'id',
 					sorter: 'number',
 					vertAlign: 'middle',
+					hozAlign: 'center',
 					headerHozAlign: 'center',
-					headerFilter: 'input',
-					headerFilterPlaceholder: 'Search Id',
+					width: 100,
 					resizable: false
 				},
 				{
@@ -48,17 +191,33 @@
 					headerHozAlign: 'center',
 					headerFilter: 'input',
 					headerFilterPlaceholder: 'Search content',
-					resizable: false
+					resizable: false,
+					formatter: (cell) => {
+						cell.getElement().classList.add('!truncate', '!inline-block', '!leading-8');
+						return cell.getValue();
+					}
 				},
 				{
 					title: 'Author',
 					field: 'author',
 					sorter: 'string',
+					width: 400,
 					vertAlign: 'middle',
 					headerHozAlign: 'center',
 					headerFilter: 'input',
 					headerFilterPlaceholder: 'Search author',
 					resizable: false
+				},
+				{
+					title: ' ',
+					width: 200,
+					vertAlign: 'middle',
+					hozAlign: 'center',
+					headerHozAlign: 'center',
+					cssClass: 'flex justify-center gap-4',
+					headerSort: false,
+					resizable: false,
+					formatter: buildActionsSection
 				}
 			]
 		});
@@ -79,141 +238,86 @@
 		await tabulatorTable.setData();
 		refreshState = false;
 	}
+
+	function buildActionsSection(cell: CellComponent, formatterParams: any, onRendered: Function) {
+		return onRendered(function () {
+			new EditButton({
+				target: cell.getElement(),
+				hydrate: true,
+				intro: true,
+				props: {
+					id: cell.getRow().getData().id,
+					table: tabulatorTable,
+					modalStore,
+					typeOfData: typeOfDataEditMotto,
+					meta: editMottoMetaData,
+					preFetchDataEndpoint: '/api/motto/getByMottoId'
+				}
+			});
+			new DeleteButton({
+				target: cell.getElement(),
+				props: {
+					id: cell.getRow().getData().id,
+					table: tabulatorTable,
+					modalStore,
+					typeOfData: typeOfDataDeleteMotto,
+					meta: deleteMottoMetaData,
+					preFetchDataEndpoint: '/api/motto/getByMottoId'
+				}
+			});
+		});
+	}
+
+	const modalRegistry: Record<string, ModalComponent> = {
+		// props: { data: data.mottoEditForm }
+		createModal: {
+			ref: CreateModal,
+			props: {
+				typeOfData: typeOfDataCreateMotto,
+				schema: mottoCreateSchema
+			}
+		},
+		editModal: {
+			ref: EditModal,
+			props: {
+				typeOfData: typeOfDataEditMotto,
+				schema: mottoUpdateSchema
+			}
+		},
+		deleteModal: {
+			ref: DeleteModal,
+			props: {
+				typeOfData: typeOfDataDeleteMotto,
+				schema: mottoDeleteSchema
+			}
+		}
+	};
 </script>
 
-<div class="flex">
+<Modal components={modalRegistry} />
+<div class="card flex flex-col p-6">
 	<h1 class="text-3xl">Manage Motto</h1>
-	<button
-		class="variant-filled-surface btn ml-auto"
-		disabled={refreshState}
-		on:click={refreshTable}
-	>
-		{#if !refreshState}
-			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-				><path
-					fill="currentColor"
-					d="M20.5 5.835A10.485 10.485 0 0 0 12 1.5c-5.427 0-9.89 4.115-10.443 9.396l-.104.994l1.99.209l.103-.995A8.501 8.501 0 0 1 19.213 7.5H15.5v2h7v-7h-2zm.057 6.066l-.104.995A8.501 8.501 0 0 1 4.787 16.5H8.5v-2h-7v7h2v-3.335A10.485 10.485 0 0 0 12 22.5c5.426 0 9.89-4.115 10.442-9.396l.104-.994z"
-				/></svg
-			>
-		{:else}
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				xmlns:xlink="http://www.w3.org/1999/xlink"
-				style="margin: auto; background: none; display: block; shape-rendering: auto;"
-				width="20px"
-				height="20px"
-				viewBox="0 0 100 100"
-				preserveAspectRatio="xMidYMid"
-			>
-				<circle cx="84" cy="50" r="10" fill="#ffd14f">
-					<animate
-						attributeName="r"
-						repeatCount="indefinite"
-						dur="0.5s"
-						calcMode="spline"
-						keyTimes="0;1"
-						values="10;0"
-						keySplines="0 0.5 0.5 1"
-						begin="0s"
-					/>
-					<animate
-						attributeName="fill"
-						repeatCount="indefinite"
-						dur="2s"
-						calcMode="discrete"
-						keyTimes="0;0.25;0.5;0.75;1"
-						values="#ffd14f;#ffd14f;#2882fb;#4ba761;#ffd14f"
-						begin="0s"
-					/>
-				</circle><circle cx="16" cy="50" r="10" fill="#ffd14f">
-					<animate
-						attributeName="r"
-						repeatCount="indefinite"
-						dur="2s"
-						calcMode="spline"
-						keyTimes="0;0.25;0.5;0.75;1"
-						values="0;0;10;10;10"
-						keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-						begin="0s"
-					/>
-					<animate
-						attributeName="cx"
-						repeatCount="indefinite"
-						dur="2s"
-						calcMode="spline"
-						keyTimes="0;0.25;0.5;0.75;1"
-						values="16;16;16;50;84"
-						keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-						begin="0s"
-					/>
-				</circle><circle cx="50" cy="50" r="10" fill="#4ba761">
-					<animate
-						attributeName="r"
-						repeatCount="indefinite"
-						dur="2s"
-						calcMode="spline"
-						keyTimes="0;0.25;0.5;0.75;1"
-						values="0;0;10;10;10"
-						keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-						begin="-0.5s"
-					/>
-					<animate
-						attributeName="cx"
-						repeatCount="indefinite"
-						dur="2s"
-						calcMode="spline"
-						keyTimes="0;0.25;0.5;0.75;1"
-						values="16;16;16;50;84"
-						keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-						begin="-0.5s"
-					/>
-				</circle><circle cx="84" cy="50" r="10" fill="#2882fb">
-					<animate
-						attributeName="r"
-						repeatCount="indefinite"
-						dur="2s"
-						calcMode="spline"
-						keyTimes="0;0.25;0.5;0.75;1"
-						values="0;0;10;10;10"
-						keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-						begin="-1s"
-					/>
-					<animate
-						attributeName="cx"
-						repeatCount="indefinite"
-						dur="2s"
-						calcMode="spline"
-						keyTimes="0;0.25;0.5;0.75;1"
-						values="16;16;16;50;84"
-						keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-						begin="-1s"
-					/>
-				</circle><circle cx="16" cy="50" r="10" fill="#ffd14f">
-					<animate
-						attributeName="r"
-						repeatCount="indefinite"
-						dur="2s"
-						calcMode="spline"
-						keyTimes="0;0.25;0.5;0.75;1"
-						values="0;0;10;10;10"
-						keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-						begin="-1.5s"
-					/>
-					<animate
-						attributeName="cx"
-						repeatCount="indefinite"
-						dur="2s"
-						calcMode="spline"
-						keyTimes="0;0.25;0.5;0.75;1"
-						values="16;16;16;50;84"
-						keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
-						begin="-1.5s"
-					/>
-				</circle>
-			</svg>
-		{/if}
-	</button>
-</div>
-<div class="mt-4 h-full rounded-lg border border-gray-300 bg-white p-2">
-	<div bind:this={tableDiv} />
+
+	<div class="ml-auto flex">
+		<CreateButton
+			table={tabulatorTable}
+			{modalStore}
+			typeOfData={typeOfDataCreateMotto}
+			meta={createMottoMetaData}
+		>
+			<span>New Motto</span>
+		</CreateButton>
+
+		<button class="variant-filled-surface btn ml-6" disabled={refreshState} on:click={refreshTable}>
+			{#if !refreshState}
+				<RefreshIcon class="h-6 w-6" />
+			{:else}
+				<Spinner class="h-6 w-6" />
+			{/if}
+		</button>
+	</div>
+
+	<div class="mt-4 h-full rounded-lg border border-gray-300 bg-white p-2">
+		<div bind:this={tableDiv} />
+	</div>
 </div>

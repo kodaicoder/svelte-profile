@@ -13,80 +13,97 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Skill{
-  id        Int      @id @default(autoincrement())
+model Skill {
+  id       Int        @id @default(autoincrement())
   userId   Int
-  user     User     @relation(fields: [userId], references: [id])
-  name      String   @db.VarChar(255)
-  level     Float
-  images SkillImage[]
+  user     User       @relation(fields: [userId], references: [id])
+  name     String     @db.VarChar(255)
+  level    Float
+  link     String?
+  image     SkillImage?
+  isActive Boolean    @default(true)
 }
 
-model SkillImage{
-  id        Int      @id @default(autoincrement())
-  url       String
-  skillId   Int
-  skill     Skill    @relation(fields: [skillId], references: [id])
-    isActive Boolean @default(true)
+model SkillImage {
+  id       Int     @id @default(autoincrement())
+  url      String
+  isActive Boolean @default(true)
+  skillId Int @unique
+  skill    Skill  @relation(fields: [skillId], references: [id])
 }
 
 model Article {
-  id        Int      @id @default(autoincrement())
-  userId   Int
-  user     User     @relation(fields: [userId], references: [id])
-  title     String   @db.VarChar(255)
-  content   String
-  images AritcleImage[]
-  link      String
+  id      Int            @id @default(autoincrement())
+  userId  Int
+  user    User           @relation(fields: [userId], references: [id])
+  title   String         @db.VarChar(255)
+  content String
+  images  AritcleImage[]
+  link    String
 }
 
 model AritcleImage {
-  id      Int      @id @default(autoincrement())
-  url     String
+  id        Int     @id @default(autoincrement())
+  url       String
   articleId Int
   article   Article @relation(fields: [articleId], references: [id])
-  isActive Boolean @default(true)
+  isActive  Boolean @default(true)
 }
 
-model Project{
-  id        Int      @id @default(autoincrement())
-  userId   Int
-  user     User     @relation(fields: [userId], references: [id])
-  title     String   @db.VarChar(255)
-  content   String?
-  images ProjectImage[]
-  sourceLink  String
-  link      String?
+model Project {
+  id         Int            @id @default(autoincrement())
+  userId     Int
+  user       User           @relation(fields: [userId], references: [id])
+  title      String         @db.VarChar(255)
+  content    String?
+  images     ProjectImage[]
+  sourceLink String
+  link       String?
 }
 
-model ProjectImage{
-  id      Int      @id @default(autoincrement())
-  url     String
+model ProjectImage {
+  id        Int     @id @default(autoincrement())
+  url       String
   projectId Int
   project   Project @relation(fields: [projectId], references: [id])
-  isActive Boolean @default(true)
+  isActive  Boolean @default(true)
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  password String
-  firstName    String?
-  lastName    String?
-  images UserImage[]
-  sessions Session[]
-  role String @default("USER")
+  id        Int         @id @default(autoincrement())
+  email     String      @unique
+  password  String
+  firstName String
+  lastName  String
+  image     UserImage?
+  sessions  Session[]
+  role      Role        @default(USER)
 
-  userProject Project[]
-  userArticle Article[]
-  userSkill Skill[]
+  projects Project[]
+  articles Article[]
+  skills   Skill[]
+  socialLinks   SocialLink[]
+  resume  Resume?
 }
 
-model UserImage{
-  id      Int      @id @default(autoincrement())
-  url     String
-  userId    Int
-  user      User   @relation(fields: [userId], references: [id])
+model Resume {
+  id      Int     @id @default(autoincrement())
+  userId  Int @unique
+  user    User    @relation(fields: [userId], references: [id])
+  url String
+  isActive Boolean @default(true)
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model UserImage {
+  id       Int     @id @default(autoincrement())
+  userId  Int @unique
+  user    User    @relation(fields: [userId], references: [id])
+  url      String
   isActive Boolean @default(true)
 }
 
@@ -98,7 +115,33 @@ model Session {
 }
 
 model Motto {
-  id      Int      @id @default(autoincrement())
-  content String   @db.VarChar(1000)
-  author  String?  @db.VarChar(250)
+  id      Int     @id @default(autoincrement())
+  content String  @db.VarChar(1000)
+  author  String? @db.VarChar(250)
+}
+
+model SocialLink {
+  id     Int      @id @default(autoincrement())
+  userId Int
+  user   User     @relation(fields: [userId], references: [id])
+  image SocialLinkImage?
+  type   LinkType
+  link   String
+}
+
+model SocialLinkImage {
+  id       Int     @id @default(autoincrement())
+  url      String
+  isActive Boolean @default(true)
+  socialLinkId   Int     @unique
+  socialLink     SocialLink @relation(fields: [socialLinkId], references: [id])
+}
+
+enum LinkType {
+  GITHUB
+  FACEBOOK
+  TWITTER
+  INSTRAGRAM
+  LINE
+  LINKEDIN
 }

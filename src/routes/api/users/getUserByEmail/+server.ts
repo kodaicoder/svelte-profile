@@ -21,6 +21,24 @@ export const POST: RequestHandler = async ({ request }: { request: Request }) =>
 
 const dataAccess = async (email: string) => {
 	const user = await prisma.user.findFirst({
+		include: {
+			image: {
+				where: {
+					isActive: true
+				}
+			},
+			resume: true,
+			skills: {
+				include: {
+					image: true
+				}
+			},
+			socialLinks: {
+				include: {
+					image: true
+				}
+			}
+		},
 		where: {
 			email: email
 		}

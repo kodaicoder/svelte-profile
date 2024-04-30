@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const GET: RequestHandler = async () => {
-	const allUsers = await getAll()
+	const image = await dataAccess()
 		.then(async (data) => {
 			await prisma.$disconnect();
 			return data;
@@ -15,10 +15,20 @@ export const GET: RequestHandler = async () => {
 			process.exit(1);
 		});
 
-	return new Response(JSON.stringify(allUsers));
+	return new Response(JSON.stringify(image));
 };
 
-async function getAll() {
-	const allUsers = await prisma.user.findMany();
-	return allUsers;
-}
+const dataAccess = async () => {
+	return await prisma.user.findFirst({
+		where: {
+			role: 'ADMIN'
+		},
+		select: {
+			image: {
+				where: {
+					isActive: true
+				}
+			}
+		}
+	});
+};

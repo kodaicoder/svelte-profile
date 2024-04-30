@@ -22,93 +22,94 @@
 
 	const socialLinkList = $socialLinkStore;
 	const userData = data.user;
+	const skillsData = data.skills;
 
 	//! The 3 data below should be fetch from API
-	const skillDatas: ISkill[] = [
-		{
-			name: 'HTML',
-			level: 4.5,
-			image:
-				'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/HTML5_logo_and_wordmark.svg/1200px-HTML5_logo_and_wordmark.svg.png',
-			link: 'https://developer.mozilla.org/en-US/docs/Web/HTML'
-		},
-		{
-			name: 'CSS',
-			level: 4.5,
-			image: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg',
-			link: 'https://developer.mozilla.org/en-US/docs/Web/CSS'
-		},
-		{
-			name: 'TailwindCSS',
-			level: 2.5,
-			image:
-				'https://b2dmain-ruk.cdn.jelastic.net/wp-content/uploads/2023/10/social-square.eab77323-removebg-preview.png',
-			link: 'https://tailwindcss.com/'
-		},
-		{
-			name: 'JavaScript',
-			level: 4.5,
-			image: 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png',
-			link: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript'
-		},
-		{
-			name: 'TypeScript',
-			level: 4,
-			image: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg',
-			link: 'https://www.typescriptlang.org/'
-		},
-		{
-			name: 'JQuery',
-			level: 3.5,
-			image: 'https://miro.medium.com/v2/resize:fit:400/1*ymOY1JGxinEMxxHkqI0T7Q.png',
-			link: 'https://jquery.com/'
-		},
-		{
-			name: 'C# .Net Core',
-			level: 4,
-			image: 'https://upload.wikimedia.org/wikipedia/commons/e/ee/.NET_Core_Logo.svg',
-			link: 'https://dotnet.microsoft.com/'
-		},
-		{
-			name: 'Go lang',
-			level: 3.5,
-			image: 'https://upload.wikimedia.org/wikipedia/commons/0/05/Go_Logo_Blue.svg',
-			link: 'https://golang.org/'
-		},
-		{
-			name: 'NodeJS',
-			level: 4,
-			image: 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg',
-			link: 'https://nodejs.org/'
-		},
-		{
-			name: 'Svelte',
-			level: 4.5,
-			image:
-				'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Svelte_Logo.svg/1200px-Svelte_Logo.svg.png',
-			link: 'https://svelte.dev/'
-		},
-		{
-			name: 'SvelteKit',
-			level: 3.5,
-			image:
-				'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Svelte_Logo.svg/1200px-Svelte_Logo.svg.png',
-			link: 'https://kit.svelte.dev/'
-		},
-		{
-			name: 'React',
-			level: 4,
-			image: 'https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg',
-			link: 'https://reactjs.org/'
-		},
-		{
-			name: 'NextJS',
-			level: 3.5,
-			image:
-				'https://d2nir1j4sou8ez.cloudfront.net/wp-content/uploads/2021/12/nextjs-boilerplate-logo.png',
-			link: 'https://nextjs.org/'
-		}
-	];
+	// const skillDatas: ISkill[] = [
+	// 	{
+	// 		name: 'HTML',
+	// 		level: 4.5,
+	// 		image:
+	// 			'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/HTML5_logo_and_wordmark.svg/1200px-HTML5_logo_and_wordmark.svg.png',
+	// 		link: 'https://developer.mozilla.org/en-US/docs/Web/HTML'
+	// 	},
+	// 	{
+	// 		name: 'CSS',
+	// 		level: 4.5,
+	// 		image: 'https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg',
+	// 		link: 'https://developer.mozilla.org/en-US/docs/Web/CSS'
+	// 	},
+	// 	{
+	// 		name: 'TailwindCSS',
+	// 		level: 2.5,
+	// 		image:
+	// 			'https://b2dmain-ruk.cdn.jelastic.net/wp-content/uploads/2023/10/social-square.eab77323-removebg-preview.png',
+	// 		link: 'https://tailwindcss.com/'
+	// 	},
+	// 	{
+	// 		name: 'JavaScript',
+	// 		level: 4.5,
+	// 		image: 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png',
+	// 		link: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript'
+	// 	},
+	// 	{
+	// 		name: 'TypeScript',
+	// 		level: 4,
+	// 		image: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg',
+	// 		link: 'https://www.typescriptlang.org/'
+	// 	},
+	// 	{
+	// 		name: 'JQuery',
+	// 		level: 3.5,
+	// 		image: 'https://miro.medium.com/v2/resize:fit:400/1*ymOY1JGxinEMxxHkqI0T7Q.png',
+	// 		link: 'https://jquery.com/'
+	// 	},
+	// 	{
+	// 		name: 'C# .Net Core',
+	// 		level: 4,
+	// 		image: 'https://upload.wikimedia.org/wikipedia/commons/e/ee/.NET_Core_Logo.svg',
+	// 		link: 'https://dotnet.microsoft.com/'
+	// 	},
+	// 	{
+	// 		name: 'Go lang',
+	// 		level: 3.5,
+	// 		image: 'https://upload.wikimedia.org/wikipedia/commons/0/05/Go_Logo_Blue.svg',
+	// 		link: 'https://golang.org/'
+	// 	},
+	// 	{
+	// 		name: 'NodeJS',
+	// 		level: 4,
+	// 		image: 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg',
+	// 		link: 'https://nodejs.org/'
+	// 	},
+	// 	{
+	// 		name: 'Svelte',
+	// 		level: 4.5,
+	// 		image:
+	// 			'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Svelte_Logo.svg/1200px-Svelte_Logo.svg.png',
+	// 		link: 'https://svelte.dev/'
+	// 	},
+	// 	{
+	// 		name: 'SvelteKit',
+	// 		level: 3.5,
+	// 		image:
+	// 			'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Svelte_Logo.svg/1200px-Svelte_Logo.svg.png',
+	// 		link: 'https://kit.svelte.dev/'
+	// 	},
+	// 	{
+	// 		name: 'React',
+	// 		level: 4,
+	// 		image: 'https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg',
+	// 		link: 'https://reactjs.org/'
+	// 	},
+	// 	{
+	// 		name: 'NextJS',
+	// 		level: 3.5,
+	// 		image:
+	// 			'https://d2nir1j4sou8ez.cloudfront.net/wp-content/uploads/2021/12/nextjs-boilerplate-logo.png',
+	// 		link: 'https://nextjs.org/'
+	// 	}
+	// ];
 	const projectDatas: IShowCaseCard[] = [
 		{
 			title: 'Project 1',
@@ -282,7 +283,7 @@
 	>
 		<div class="relative mt-auto">
 			<Avatar
-				src={heroImage}
+				src={data.imageUrl}
 				width="size-40 md:size-52 lg:size-72"
 				rounded="!rounded-full"
 				alt="Nutchapon Makelai"
@@ -318,7 +319,7 @@
 		<hr class="neon w-1/2" />
 	</div>
 	<div class="section-content my-4 mb-12 h-full overflow-y-auto px-4">
-		<Skills {skillDatas} />
+		<Skills {skillsData} />
 	</div>
 	<div class="absolute bottom-2 flex w-full justify-center">
 		<NextSectionButton scrollTo="project"></NextSectionButton>

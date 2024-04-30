@@ -4,6 +4,7 @@
 
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
 	import { isHamburgerMenuOpenStore } from '$lib/stores/IsHamburgerMenuOpenStore';
+	import { page } from '$app/stores';
 
 	export let menu: IMenu;
 	let scrollY: number;
@@ -32,6 +33,7 @@
 		<a
 			href={menu.link}
 			class=" hover:text-neon flex h-10 w-full items-center justify-center whitespace-nowrap text-white md:h-6"
+			class:text-neon={$page.url.pathname === menu.link}
 		>
 			{menu.text}
 		</a>
