@@ -1,8 +1,6 @@
 import type { RequestHandler } from './$types';
-import { PrismaClient } from '@prisma/client';
+import prisma from '$lib/prismaInstance/prismaClient';
 import type { IMotto } from '$lib/types/IMotto';
-
-const prisma = new PrismaClient();
 
 export const GET: RequestHandler = async () => {
 	let allMotto: IMotto[] | void = [];

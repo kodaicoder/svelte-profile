@@ -1,8 +1,6 @@
 import type { RequestHandler } from './$types';
-import { PrismaClient } from '@prisma/client';
+import prisma from '$lib/prismaInstance/prismaClient';
 import { put, del } from '@vercel/blob';
-
-const prisma = new PrismaClient();
 
 export const POST: RequestHandler = async ({ request }: { request: Request }) => {
 	const formData = await request.formData();

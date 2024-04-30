@@ -1,7 +1,5 @@
 import type { RequestHandler } from './$types';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '$lib/prismaInstance/prismaClient';
 
 export const POST: RequestHandler = async ({ request }: { request: Request }) => {
 	const { email, password, firstName, lastName } = await request.json();

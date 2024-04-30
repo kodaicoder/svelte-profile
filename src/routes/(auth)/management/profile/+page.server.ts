@@ -18,7 +18,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 	}
 
 	const { user } = await lucia.validateSession(locals.session.id);
-
 	const userData = await axios
 		.post<{ user: IUser }>('/api/users/getUserByEmail/', {
 			email: user?.email

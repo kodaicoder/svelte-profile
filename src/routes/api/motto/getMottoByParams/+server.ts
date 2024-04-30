@@ -1,9 +1,7 @@
 import type { RequestHandler } from './$types';
-import { PrismaClient } from '@prisma/client';
+import prisma from '$lib/prismaInstance/prismaClient';
 import type { IMotto } from '$lib/types/IMotto';
 import parseParams, { type IFilter, type ISort } from '$lib/helper/tabulatorParseParams';
-
-const prisma = new PrismaClient();
 
 export const GET: RequestHandler = async ({ url, locals }) => {
 	let allMotto: IMotto[] | void = [];

@@ -1,11 +1,9 @@
 import type { RequestHandler } from './$types';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '$lib/prismaInstance/prismaClient';
 
 export const POST: RequestHandler = async ({ request }: { request: Request }) => {
 	const { userId } = await request.json();
-	const userRoles = await dataAccess(userId)
+	const userRole = await dataAccess(userId)
 		.then(async (data) => {
 			await prisma.$disconnect();
 			return data;
@@ -16,17 +14,17 @@ export const POST: RequestHandler = async ({ request }: { request: Request }) =>
 			process.exit(1);
 		});
 
-	const roles = userRoles.map((userRole) => userRole.role.name);
+	const role = userRole?.role || 'USER';
 
-	return new Response(JSON.stringify({ roles }));
+	return new Response(JSON.stringify({ role }));
 };
 
 const dataAccess = async (userId: number) => {
-	const userRole = await prisma.userRole.findMany({
+	const userRole = await prisma.user.findFirst({
 		where: {
-			userId: userId
+			id: userId
 		},
-		include: {
+		select: {
 			role: true
 		}
 	});
