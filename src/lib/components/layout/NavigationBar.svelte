@@ -24,10 +24,9 @@
 <svelte:window bind:outerWidth={windowWidth} />
 <div transition:slide={{ delay: 20, duration: 200 }}>
 	<AppBar
-		gridColumns="grid-cols-3"
 		slotDefault="place-self-center"
-		slotLead=" ml-4 min-w-72 !justify-start"
-		slotTrail="place-content-end mr-4"
+		slotLead=" ml-4 "
+		slotTrail=" mr-4"
 		padding="p-3 md:p-4"
 		border="neon"
 	>
