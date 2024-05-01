@@ -5,22 +5,21 @@
 	import NeonText from '$lib/components/generic/NeonText.svelte';
 	import NextSectionButton from '$lib/components/generic/NextSectionButton.svelte';
 	import { Avatar } from '@skeletonlabs/skeleton';
-	import heroImage from '$lib/images/hero.webp';
+
 	// import aboutMeImage from '$lib/images/web_dev.webp';
 	import aboutMeImage from '$lib/images/aboutme.webp';
-	import { socialLinkStore } from '$lib/stores/SocialLinkStore';
+
 	import FooterBar from '$lib/components/layout/FooterBar.svelte';
 	import MottoBlock from '$lib/components/generic/MottoBlock.svelte';
 	import CarouselWithSearch from '$lib/components/generic/CarouselWithSearch.svelte';
 	import LogoutButton from '$lib/components/generic/LogoutButton.svelte';
 	import { goto, invalidateAll } from '$app/navigation';
-	import type ISkill from '$lib/types/ISkill';
 	import type IShowCaseCard from '$lib/types/IShowCaseCard';
 	import Skills from '$lib/components/generic/Skills.svelte';
 
 	export let data: PageData;
 
-	const socialLinkList = $socialLinkStore;
+	const socialLinkList = data.socialLinks;
 	const userData = data.user;
 	const skillsData = data.skills;
 
@@ -385,10 +384,7 @@
 					type="button"
 					class="variant-filled-primary btn flex w-fit gap-4"
 					on:click={() => {
-						window.open(
-							'https://drive.google.com/uc?export=download&id=1e_HRTT2sSPx7cMxEZiT4IzrtFJORbV5U',
-							'_blank'
-						);
+						window.open(`${data.resumeUrl}`, '_blank');
 					}}
 				>
 					<DownloadIcon class="w-8" />

@@ -43,7 +43,7 @@ export const profileDetailSchema = z.object({
 					})
 					.optional()
 					.nullable(),
-				link: z.string().url().optional(),
+				link: z.string().optional().nullable(),
 				type: z.string()
 				// enum(['GITHUB', 'FACEBOOK', 'TWITTER', 'INSTAGRAM', 'LINE', 'LINKEDIN'])
 			})
@@ -68,6 +68,7 @@ export const profileDetailSchema = z.object({
 					})
 					.optional()
 					.nullable(),
+				link: z.string().url().optional().nullable(),
 				isActive: z.boolean().default(true)
 			})
 			.optional()

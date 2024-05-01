@@ -32,9 +32,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 		});
 
 	const { image, resume, ...restUserData } = userData;
-	const initailImage = { ...image, userId: user?.id };
+	const initialImage = { ...image, userId: user?.id };
 
-	const profilePictureForm = await superValidate(initailImage, zod(profilePictureSchema));
+	const profilePictureForm = await superValidate(initialImage, zod(profilePictureSchema));
 	const profileDetailForm = await superValidate(restUserData, zod(profileDetailSchema));
 	const resumeFileForm = await superValidate(resume, zod(resumeFileSchema));
 

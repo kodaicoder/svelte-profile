@@ -122,6 +122,7 @@ model SocialLink {
   image SocialLinkImage?
   type   String
   link   String
+  isActive Boolean @default(true)
 }
 
 model SocialLinkImage {

@@ -6,11 +6,15 @@
 
 <li>
 	<a
-		href={socialLink.type != 'email' ? socialLink.url : 'mailto:' + socialLink.url}
+		href={socialLink.type.toLowerCase() != 'email' ? socialLink.link : 'mailto:' + socialLink.link}
 		target="_blank"
 		rel="noopener noreferrer"
 		class="flex h-6 w-6 items-center justify-center"
 	>
-		<svelte:component this={socialLink.icon} class="hover:svg-neon fill-on-surface-token" />
+		<img
+			src={socialLink.image.url}
+			alt={socialLink.type}
+			class="hover:!social-neon social-icon size-12"
+		/>
 	</a>
 </li>

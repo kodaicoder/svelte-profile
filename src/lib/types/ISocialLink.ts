@@ -1,8 +1,5 @@
-import type { ComponentType } from 'svelte';
+import type { SocialLink, SocialLinkImage } from '@prisma/client';
 
-export default interface ISocialLink {
-	icon: ComponentType;
-	name: 'github' | 'facebook' | 'instagram' | 'x' | 'line' | 'email';
-	url: string;
-	type: 'social' | 'email';
+export default interface ISocialLink extends Required<SocialLink & SocialLinkImage> {
+	image: SocialLinkImage;
 }

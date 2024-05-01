@@ -6,7 +6,6 @@
 	import NavigationBar from '$lib/components/layout/NavigationBar.svelte';
 
 	import { isTopNavShowStore } from '$lib/stores/IsTopNavShowStore';
-	import { socialLinkStore } from '$lib/stores/SocialLinkStore';
 
 	import SideBar from '$lib/components/layout/SideBar.svelte';
 
@@ -23,7 +22,7 @@
 		{ text: 'Project' },
 		{ text: 'About Me' }
 	];
-	const socialLinkList = $socialLinkStore;
+	const socialLinkList = data.socialLinks;
 	let previousFromTop = 0;
 	let isShowToTopButton = false;
 

@@ -3,7 +3,11 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import type { PageData } from './$types';
 	import { fileProxy, superForm } from 'sveltekit-superforms';
-	import { profilePictureSchema, resumeFileSchema } from '$lib/validators/profileSchema';
+	import {
+		profileDetailSchema,
+		profilePictureSchema,
+		resumeFileSchema
+	} from '$lib/validators/profileSchema';
 	import Swal from 'sweetalert2';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import ErrorMessage from '$lib/components/generic/ErrorMessage.svelte';
@@ -61,6 +65,55 @@
 	const profilePicture = fileProxy(profilePictureForm, 'uploadImage');
 
 	const {
+		form: profileDetailForm,
+		enhance: profileDetailEnhance,
+		errors: profileDetailErrors
+	} = superForm(data.profileDetailForm, {
+		dataType: 'json',
+		resetForm: true,
+		invalidateAll: 'force',
+		validators: zod(profileDetailSchema),
+		onSubmit: () => {
+			buttonLoadState = true;
+		},
+		onUpdate: ({ form }) => {
+			if (Object.keys(form.errors).length === 0) {
+				Swal.fire({
+					title: 'Update success',
+					text: 'Your new profile detail has been saved successfully',
+					icon: 'success',
+					confirmButtonText: 'Ok',
+					allowOutsideClick: false
+				})
+					.then(async () => {
+						// something handle success upload picture
+						//await invalidateAll();
+						buttonLoadState = false;
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			} else {
+				buttonLoadState = false;
+			}
+		},
+		onError: ({ result }) => {
+			buttonLoadState = false;
+			let error, html;
+
+			error = JSON.parse(result.error.message);
+			html = 'Error occurred <br>' + error.status + ': ' + error.statusText;
+			Swal.fire({
+				title: 'Update failed',
+				html,
+				icon: 'error',
+				confirmButtonText: 'Close',
+				allowOutsideClick: false
+			});
+		}
+	});
+
+	const {
 		form: resumeFileForm,
 		enhance: resumeFileEnhance,
 		errors: resumeFileErrors
@@ -112,6 +165,7 @@
 
 <div class="card grid p-6">
 	<h1 class="mb-6 text-3xl">Manage Profile</h1>
+
 	<form
 		id="profilePictureForm"
 		name="profilePictureForm"
@@ -169,24 +223,23 @@
 	<hr class="neon mx-auto my-8 w-[90%]" />
 
 	<form
-		id="profileForm"
-		name="profileForm"
+		id="profileDetailForm"
+		name="profileDetailForm"
 		class="grid grid-cols-1 gap-6 justify-self-center p-8 md:max-w-6xl md:grid-cols-2"
+		method="POST"
+		action="?/profileDetailUpdate"
+		use:profileDetailEnhance
 	>
-		<label class="label relative" for="profileImage">
-			<span class="relative"> Upload profile picture </span>
-			<small class="ml-2">{`(size <= 500 kb)`}</small>
-			<input
-				id="profileImage"
-				name="profileImage"
-				class="input"
-				type="file"
-				accept=".jpg, .jpeg, .png"
-			/>
-		</label>
 		<label class="label relative" for="email">
 			<span class="relative"> Email </span>
-			<input id="email" name="email" class="input" type="email" placeholder="Enter email..." />
+			<input
+				id="email"
+				name="email"
+				class="input"
+				type="email"
+				placeholder="Enter email..."
+				bind:value={$profileDetailForm.email}
+			/>
 		</label>
 		<label class="label relative" for="firstName">
 			<span class="relative"> First Name </span>
@@ -196,6 +249,7 @@
 				class="input"
 				type="text"
 				placeholder="Enter first name..."
+				bind:value={$profileDetailForm.firstName}
 			/>
 		</label>
 		<label class="label relative" for="lastName">
@@ -206,9 +260,21 @@
 				class="input"
 				type="text"
 				placeholder="Enter last name..."
+				bind:value={$profileDetailForm.lastName}
 			/>
 		</label>
 	</form>
+	<button
+		type="submit"
+		class="btn variant-gradient-tertiary-secondary mx-auto w-32 flex-1 bg-gradient-to-br"
+		disabled={buttonLoadState}
+	>
+		{#if buttonLoadState}
+			<Spinner class="h-6 w-6 text-surface-700" />
+		{:else}
+			Update
+		{/if}
+	</button>
 
 	<hr class="neon mx-auto my-8 w-[90%]" />
 
