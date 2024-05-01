@@ -2,6 +2,10 @@
 	"name": "project",
 	"version": "0.0.1",
 	"private": true,
+	"prisma:inline": "cp ./node_modules/.prisma/client/*.js ./node_modules/@prisma/client",
+	"prisma:migrate": "prisma migrate deploy && npm run prisma:inline",
+	"prisma:migrate:dev": "prisma migrate dev && npm run prisma:inline",
+	"prisma:generate": "prisma generate && npm run prisma:inline",
 	"scripts": {
 		"postinstall": "prisma generate",
 		"dev": "vite dev",
