@@ -13,10 +13,13 @@ import { loginSchema } from '$lib/validators/loginSchema';
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
 		const { role } = locals.user;
-		if (role != 'ADMIN') {
-			redirect(301, '/');
-		} else {
-			redirect(301, '/management');
+
+		if (role) {
+			if (role != 'ADMIN') {
+				redirect(301, '/');
+			} else {
+				redirect(301, '/management');
+			}
 		}
 	}
 

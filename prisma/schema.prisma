@@ -77,8 +77,7 @@ model User {
   lastName  String
   image     UserImage?
   sessions  Session[]
-  role      Role        @default(USER)
-
+  role      String      @default("USER")
   projects Project[]
   articles Article[]
   skills   Skill[]
@@ -94,10 +93,6 @@ model Resume {
   isActive Boolean @default(true)
 }
 
-enum Role {
-  USER
-  ADMIN
-}
 
 model UserImage {
   id       Int     @id @default(autoincrement())
@@ -125,7 +120,7 @@ model SocialLink {
   userId Int
   user   User     @relation(fields: [userId], references: [id])
   image SocialLinkImage?
-  type   LinkType
+  type   String
   link   String
 }
 
@@ -137,11 +132,3 @@ model SocialLinkImage {
   socialLink     SocialLink @relation(fields: [socialLinkId], references: [id])
 }
 
-enum LinkType {
-  GITHUB
-  FACEBOOK
-  TWITTER
-  INSTRAGRAM
-  LINE
-  LINKEDIN
-}

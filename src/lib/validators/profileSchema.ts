@@ -1,4 +1,3 @@
-import { LinkType, Role } from '@prisma/client';
 import { z } from 'zod';
 
 const uploadProfilePicture = z
@@ -28,7 +27,8 @@ export const profileDetailSchema = z.object({
 	lastName: z.string().min(1),
 	email: z.string().email(),
 	password: z.string().min(8),
-	role: z.nativeEnum(Role),
+	role: z.string(),
+	// .enum(['USER', 'ADMIN']),
 	socialLinks: z.array(
 		z
 			.object({
@@ -44,7 +44,8 @@ export const profileDetailSchema = z.object({
 					.optional()
 					.nullable(),
 				link: z.string().url().optional(),
-				type: z.nativeEnum(LinkType)
+				type: z.string()
+				// enum(['GITHUB', 'FACEBOOK', 'TWITTER', 'INSTAGRAM', 'LINE', 'LINKEDIN'])
 			})
 			.optional()
 	),
