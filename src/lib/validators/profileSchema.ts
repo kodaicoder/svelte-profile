@@ -73,28 +73,27 @@ export const profileDetailSchema = z.object({
 	)
 });
 
+const uploadResumeSchema = z
+	.instanceof(File, {
+		message: 'Please choose your new resume file.'
+	})
+	.refine((file) => file.size < 5000000, { message: 'File size must be less than 5MB.' })
+	.refine(
+		(file) => {
+			const allowedExtensions = [
+				'application/msword',
+				'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+				'application/pdf'
+			];
+			return allowedExtensions.includes(file.type);
+		},
+		{ message: 'File type must be .doc, .docx or .pdf.' }
+	);
+
 export const resumeFileSchema = z.object({
 	id: z.number().int().optional().nullable(),
 	userId: z.number().int().optional().nullable(),
 	url: z.string().url().optional().nullable(),
-	isActive: z.boolean().default(true)
-});
-
-export const uploadResumeSchema = z.object({
-	file: z
-		.instanceof(File, {
-			message: 'Please choose your new resume file.'
-		})
-		.refine((file) => file.size < 5000000, { message: 'File size must be less than 5MB.' })
-		.refine(
-			(file) => {
-				const allowedExtensions = [
-					'application/msword',
-					'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-					'application/pdf'
-				];
-				return allowedExtensions.includes(file.type);
-			},
-			{ message: 'File type must be .doc, .docx or .pdf.' }
-		)
+	isActive: z.boolean().default(true),
+	uploadResume: uploadResumeSchema.optional()
 });

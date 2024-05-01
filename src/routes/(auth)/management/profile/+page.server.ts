@@ -16,7 +16,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.session) {
 		redirect(301, '/login');
 	}
-
 	const { user } = await lucia.validateSession(locals.session.id);
 	const userData = await axios
 		.post<{ user: IUser }>('/api/users/getUserByEmail/', {
@@ -78,6 +77,39 @@ export const actions: Actions = {
 			});
 
 		form.data = newProfilePicture;
+		return { form };
+	},
+	resumeUpload: async ({ request }) => {
+		const formData = await request.formData();
+		const form = await superValidate(formData, zod(resumeFileSchema));
+
+		if (!form.valid) {
+			return fail(400, { form });
+		}
+
+		const resume = formData.get('uploadResume') as File;
+		if (resume.size == 0) {
+			return setError(form, 'uploadResume', 'Please choose your new resume file.');
+		}
+
+		const newResume = await axios
+			.post<UserImage>('/api/users/uploadResume/', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+			.then((response) => {
+				return response.data;
+			})
+			.catch((err) => {
+				const { status, statusText, data } = err;
+				// console.log(err);
+				throw error(404, {
+					message: JSON.stringify({ status, statusText, data })
+				});
+			});
+
+		form.data = newResume;
 		return { form };
 	}
 };
