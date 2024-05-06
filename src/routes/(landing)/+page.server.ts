@@ -4,18 +4,20 @@ import { error } from '@sveltejs/kit';
 import type { Resume, UserImage } from '@prisma/client';
 import type ISkill from '$lib/types/ISkill';
 import type ISocialLink from '$lib/types/ISocialLink';
+import type IProject from '$lib/types/IProject';
 
 export const load = (async ({ locals }) => {
 	const user = locals.user;
 
-	const [imageUrl, skills, resumeUrl, socialLinks] = await Promise.all([
+	const [imageUrl, skills, resumeUrl, socialLinks, projects] = await Promise.all([
 		getProfilePicture(),
 		getSkills(),
 		getResumeUrl(),
-		getSocialLinks()
+		getSocialLinks(),
+		getAllProject()
 	]);
 
-	return { user, imageUrl, skills, resumeUrl, socialLinks };
+	return { user, imageUrl, skills, resumeUrl, socialLinks, projects };
 }) satisfies PageServerLoad;
 
 async function getProfilePicture() {
@@ -69,6 +71,20 @@ async function getSocialLinks() {
 		.get<{ socialLinks: ISocialLink[] }>('/api/landing/getSocialLinks/')
 		.then((response) => {
 			return response.data.socialLinks;
+		})
+		.catch((err) => {
+			const { status, statusText, data } = err;
+			throw error(404, {
+				message: JSON.stringify({ status, statusText, data })
+			});
+		});
+}
+
+async function getAllProject() {
+	return await axios
+		.get<IProject[]>('/api/project/getAllProject/')
+		.then((response) => {
+			return response.data;
 		})
 		.catch((err) => {
 			const { status, statusText, data } = err;

@@ -29,6 +29,9 @@ const dataAccess = async (email: string) => {
 			skills: {
 				include: {
 					image: true
+				},
+				orderBy: {
+					id: 'asc'
 				}
 			},
 			socialLinks: {

@@ -1,7 +1,8 @@
 export default interface IShowCaseCard {
+	id: number;
 	title: string;
 	content: string;
-	images: string[];
+	images?: (string | undefined)[] | null;
 	sourceLink?: string | null;
-	link: string;
+	link: string | null;
 }

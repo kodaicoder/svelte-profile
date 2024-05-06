@@ -1,10 +1,11 @@
 import type { RequestHandler } from './$types';
-import type { IMotto } from '$lib/types/IMotto';
+import type IProject from '$lib/types/IProject';
 import prisma from '$lib/prismaInstance/prismaClient';
 import parseParams, { type IFilter, type ISort } from '$lib/helper/tabulatorParseParams';
 
 export const GET: RequestHandler = async ({ url, locals }) => {
-	let allMotto: IMotto[] | void = [];
+	let allProject: IProject[] | void = [];
+
 	const { skip, limit, sort, filter } = parseParams(url.searchParams);
 
 	let last_page = 1;
@@ -16,7 +17,8 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 		}
 		const totalRows = await getTotalRows();
 		if (totalRows > 0) {
-			allMotto = await getByParams(+skip, +limit, sort, filter, +locals.user.id)
+			const userId = locals.user.id;
+			allProject = await getByParams(+skip, +limit, sort, filter, +userId)
 				.then(async (data) => {
 					await prisma.$disconnect();
 					return data;
@@ -35,13 +37,13 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 		JSON.stringify({
 			last_page,
 			last_row,
-			data: allMotto
+			data: allProject
 		})
 	);
 };
 
 async function getTotalRows() {
-	return await prisma.motto.count();
+	return await prisma.project.count();
 }
 
 async function getByParams(
@@ -71,13 +73,23 @@ async function getByParams(
 		}, {});
 	}
 
-	return await prisma.motto.findMany({
+	return await prisma.project.findMany({
+		where: {
+			user: {
+				id: userId,
+				role: 'ADMIN'
+			},
+			...where
+		},
+		include: {
+			image: {
+				where: {
+					isActive: true
+				}
+			}
+		},
 		skip: (skip - 1) * limit,
 		take: limit,
-		orderBy: sort ? orderBy : undefined,
-		where: {
-			userId: userId,
-			...where
-		}
+		orderBy: sort ? orderBy : undefined
 	});
 }

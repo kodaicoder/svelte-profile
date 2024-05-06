@@ -19,12 +19,18 @@ export const POST: RequestHandler = async ({ request }: { request: Request }) =>
 			process.exit(1);
 		});
 
-	return new Response(JSON.stringify({ profilePicture }));
+	return new Response(JSON.stringify({ ...profilePicture }));
 };
 
-const dataAccess = async (userId: number, oldImageUrl: string, uploadImage: File) => {
-	//! delete old image
-	await del(oldImageUrl);
+const dataAccess = async (
+	userId: number,
+	oldImageUrl: string | null | undefined,
+	uploadImage: File
+) => {
+	if (oldImageUrl) {
+		//! delete old image
+		await del(oldImageUrl);
+	}
 
 	//! upload image to blob storage
 	const blobResponse = await put(`profile/${userId}/${uploadImage.name}`, uploadImage, {

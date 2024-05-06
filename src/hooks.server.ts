@@ -33,6 +33,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			...sessionCookie.attributes
 		});
 	}
+
 	event.locals.user = user;
 	event.locals.session = session;
 	return resolve(event);

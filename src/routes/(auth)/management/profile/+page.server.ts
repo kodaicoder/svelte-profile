@@ -38,6 +38,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const profileDetailForm = await superValidate(restUserData, zod(profileDetailSchema));
 	const resumeFileForm = await superValidate(resume, zod(resumeFileSchema));
 
+	console.log(restUserData.skills);
 	return {
 		profilePictureForm,
 		profileDetailForm,
@@ -76,7 +77,7 @@ export const actions: Actions = {
 				});
 			});
 
-		form.data = newProfilePicture;
+		form.data = { ...newProfilePicture, uploadImage: undefined };
 		return { form };
 	},
 	resumeUpload: async ({ request }) => {
@@ -109,7 +110,7 @@ export const actions: Actions = {
 				});
 			});
 
-		form.data = newResume;
+		form.data = { ...newResume, uploadResume: undefined };
 		return { form };
 	}
 };

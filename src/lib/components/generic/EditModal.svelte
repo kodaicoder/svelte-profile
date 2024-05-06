@@ -4,7 +4,13 @@
 
 	// Stores
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { superForm, type Infer, type SuperValidated, defaults } from 'sveltekit-superforms';
+	import {
+		superForm,
+		type Infer,
+		type SuperValidated,
+		defaults,
+		fileProxy
+	} from 'sveltekit-superforms';
 	import { mottoUpdateSchema, type MottoUpdateSchema } from '$lib/validators/mottoSchema';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import Swal from 'sweetalert2';
@@ -20,6 +26,18 @@
 	// export let data: SuperValidated<Infer<MottoUpdateSchema>>;
 	let buttonLoadState = false;
 
+	let fileInputMeta:
+		| {
+				name: string;
+				element: string;
+				type: string;
+				label?: string | null | undefined;
+				accept?: string[] | null | undefined;
+		  }
+		| undefined;
+
+	let imageStore;
+
 	const modalStore = getModalStore();
 
 	const data: CustomModalSettings<typeof typeOfData> = $modalStore[0];
@@ -28,12 +46,15 @@
 		defaults(data.meta?.initialData, zod(schema)),
 		{
 			validators: zod(schema),
+			resetForm: false,
 			invalidateAll: false,
+			dataType: 'json',
 			onSubmit: () => {
 				buttonLoadState = true;
 			},
 			onUpdate: ({ form }) => {
-				if (Object.keys(form.errors).length === 0) {
+				if (form.valid) {
+					reset({ data: form.data });
 					Swal.fire({
 						title: data.meta?.swal?.success?.title,
 						text: data.meta?.swal?.success?.text,
@@ -68,6 +89,13 @@
 		}
 	);
 
+	$: {
+		fileInputMeta = data.meta?.form?.children.find((item) => item.type === 'file');
+		if (fileInputMeta) {
+			imageStore = fileProxy(form, `${fileInputMeta.name}`);
+		}
+	}
+
 	function handdleCloseModal() {
 		reset();
 		modalStore.close();
@@ -83,6 +111,7 @@
 			name={data.meta?.form?.name}
 			method={data.meta?.form?.method}
 			action={data.meta?.form?.action}
+			enctype={fileInputMeta ? 'multipart/form-data' : 'application/x-www-form-urlencoded'}
 			class="modal-form space-y-4 border border-surface-500 p-4 rounded-container-token"
 			use:enhance
 		>
@@ -91,6 +120,45 @@
 					{#if item.element === 'input'}
 						{#if item.type === 'hidden'}
 							<input type="hidden" name={item.name} bind:value={$form[item.name]} />
+						{:else if item.type === 'file'}
+							<div class="flex gap-4">
+								<label class="label relative" for={item.name}>
+									<span
+										>{item.label}
+										{#if $errors[item.name]}
+											<ErrorMessage
+												class="absolute -top-2 right-2"
+												errorMessage={$errors[item.name]
+													? $errors[item.name][$errors[item.name].length - 1]
+													: ''}
+											/>
+										{/if}</span
+									>
+									{#if item.maxSize}
+										<small class="ml-2"
+											>{`(size <= ${item.maxSize >= 1000000 ? item.maxSize / 1000000 + ` mb` : item.maxSize + ` kb`})`}</small
+										>
+									{/if}
+									<input
+										id={item.name}
+										name={item.name}
+										class="input"
+										type="file"
+										accept={item.accept?.join(',')}
+										aria-invalid={$errors[item.name] ? 'true' : undefined}
+										bind:files={$imageStore}
+									/>
+								</label>
+								{#if $form[item.name] && $form.image.url}
+									<img
+										src={URL.createObjectURL($form[item.name])}
+										alt="preview"
+										class="h-20 w-20 object-cover"
+									/>
+								{:else}
+									<img src={$form.image.url} alt="preview" class="h-20 w-20 object-cover" />
+								{/if}
+							</div>
 						{:else}
 							<label class="label relative" for={item.name}>
 								<span class="relative">

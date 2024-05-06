@@ -1,23 +1,21 @@
 <script lang="ts">
-	import EditIcon from './../../../../lib/components/icons/EditIcon.svelte';
-	import type { IMotto } from '$lib/types/IMotto';
-	import type { CustomModalSettings } from '$lib/types/IModal';
-	import CreateModal from '$lib/components/generic/motto/CreateModal.svelte';
-	import EditModal from '$lib/components/generic/motto/EditModal.svelte';
-	import DeleteModal from '$lib/components/generic/motto/DeleteModal.svelte';
+	import type IProject from '$lib/types/IProject';
+	import CreateButton from '$lib/components/generic/CreateButton.svelte';
+	import CreateModal from '$lib/components/generic/CreateModal.svelte';
+	import EditButton from '$lib/components/generic/EditButton.svelte';
+	import EditModal from '$lib/components/generic/EditModal.svelte';
+	import DeleteButton from '$lib/components/generic/DeleteButton.svelte';
+	import DeleteModal from '$lib/components/generic/DeleteModal.svelte';
+	import Spinner from '$lib/components/icons/Spinner.svelte';
 	import RefreshIcon from '$lib/components/icons/RefreshIcon.svelte';
 	import { TabulatorFull as Tabulator, type CellComponent } from 'tabulator-tables';
 	import { onMount } from 'svelte';
-	import EditButton from '$lib/components/generic/motto/EditButton.svelte';
-	import DeleteButton from '$lib/components/generic/motto/DeleteButton.svelte';
-	import Spinner from '$lib/components/icons/Spinner.svelte';
 	import { Modal, getModalStore, type ModalComponent } from '@skeletonlabs/skeleton';
 	import {
-		mottoCreateSchema,
-		mottoUpdateSchema,
-		mottoDeleteSchema
-	} from '$lib/validators/mottoSchema.js';
-	import CreateButton from '$lib/components/generic/motto/CreateButton.svelte';
+		projectCreateSchema,
+		projectUpdateSchema,
+		projectDeleteSchema
+	} from '$lib/validators/projectSchema.js';
 
 	let tableDiv: string | HTMLElement;
 	let tabulatorTable: any;
@@ -25,17 +23,31 @@
 
 	const modalStore = getModalStore(); //passing modal store to action components
 
-	const typeOfDataCreateMotto = {} as IMotto;
-	const typeOfDataEditMotto = {} as IMotto;
-	const typeOfDataDeleteMotto = {} as IMotto;
+	const typeOfDataCreateProject = {} as IProject;
+	const typeOfDataEditProject = {} as IProject;
+	const typeOfDataDeleteProject = {} as IProject;
 
-	const createMottoMetaData = {
-		title: 'Create Motto',
+	const createProjectMetaData = {
+		title: 'Create Project',
 		form: {
-			name: 'createMotto',
+			name: 'createProject',
 			method: 'POST',
-			action: './motto?/create',
+			action: './project?/create',
 			children: [
+				{
+					name: 'uploadImage',
+					element: 'input',
+					type: 'file',
+					label: 'Project Image',
+					accept: ['image/png', 'image/jpg', 'image/jpeg', 'image/webp'],
+					maxSize: 1000000
+				},
+				{
+					name: 'title',
+					element: 'input',
+					type: 'text',
+					label: 'Project Title'
+				},
 				{
 					name: 'content',
 					element: 'textarea',
@@ -43,10 +55,16 @@
 					label: 'Content'
 				},
 				{
-					name: 'author',
+					name: 'sourceLink',
 					element: 'input',
 					type: 'text',
-					label: 'Author name'
+					label: 'Source Link'
+				},
+				{
+					name: 'link',
+					element: 'input',
+					type: 'text',
+					label: 'Demo Link'
 				}
 			]
 		},
@@ -60,25 +78,39 @@
 		},
 		swal: {
 			success: {
-				title: 'Create motto success',
-				text: 'Motto data has been save successfully'
+				title: 'Create project success',
+				text: 'Project data has been save successfully'
 			},
 			error: {
-				title: 'Create motto failed'
+				title: 'Create project failed'
 			}
 		}
 	};
-	const editMottoMetaData = {
-		title: 'Edit Motto',
+	const editProjectMetaData = {
+		title: 'Edit Project',
 		form: {
-			name: 'editMotto',
+			name: 'editProject',
 			method: 'POST',
-			action: './motto?/update',
+			action: './project?/update',
 			children: [
 				{
 					name: 'id',
 					element: 'input',
 					type: 'hidden'
+				},
+				{
+					name: 'uploadImage',
+					element: 'input',
+					type: 'file',
+					label: 'Project Image',
+					accept: ['image/png', 'image/jpg', 'image/jpeg', 'image/webp'],
+					maxSize: 1000000
+				},
+				{
+					name: 'title',
+					element: 'input',
+					type: 'text',
+					label: 'Project Title'
 				},
 				{
 					name: 'content',
@@ -87,10 +119,16 @@
 					label: 'Content'
 				},
 				{
-					name: 'author',
+					name: 'sourceLink',
 					element: 'input',
 					type: 'text',
-					label: 'Author name'
+					label: 'Source Link'
+				},
+				{
+					name: 'link',
+					element: 'input',
+					type: 'text',
+					label: 'Demo Link'
 				}
 			]
 		},
@@ -104,20 +142,20 @@
 		},
 		swal: {
 			success: {
-				title: 'Update motto success',
-				text: 'Motto data has been save successfully'
+				title: 'Update project success',
+				text: 'Project data has been save successfully'
 			},
 			error: {
-				title: 'Update motto failed'
+				title: 'Update project failed'
 			}
 		}
 	};
-	const deleteMottoMetaData = {
-		title: 'Delete Motto',
+	const deleteProjectMetaData = {
+		title: 'Delete Project',
 		form: {
-			name: 'deleteMotto',
+			name: 'deleteProject',
 			method: 'POST',
-			action: './motto?/delete',
+			action: './project?/delete',
 			children: [
 				{
 					name: 'id',
@@ -136,18 +174,18 @@
 		},
 		swal: {
 			success: {
-				title: 'Delete motto success',
-				text: 'Motto data has been remove successfully'
+				title: 'Delete project success',
+				text: 'Project data has been remove successfully'
 			},
 			error: {
-				title: 'Delete motto failed'
+				title: 'Project motto failed'
 			}
 		}
 	};
 
 	onMount(() => {
 		tabulatorTable = new Tabulator(tableDiv, {
-			layout: 'fitColumns',
+			layout: 'fitData',
 			height: 400,
 			rowHeight: 50,
 			selectable: false,
@@ -191,10 +229,26 @@
 					vertAlign: 'middle',
 					headerHozAlign: 'center',
 					headerFilter: 'input',
+					headerFilterPlaceholder: 'Search title',
+					resizable: false,
+					formatter: (cell) => {
+						cell.getElement().classList.add('!truncate', '!inline-block', '!leading-8', '!w-44');
+						return cell.getValue();
+					}
+				},
+				{
+					title: 'Content',
+					field: 'content',
+					sorter: 'string',
+					vertAlign: 'middle',
+					headerHozAlign: 'center',
+					headerFilter: 'input',
 					headerFilterPlaceholder: 'Search content',
 					resizable: false,
 					formatter: (cell) => {
-						cell.getElement().classList.add('!truncate', '!inline-block', '!leading-8');
+						cell
+							.getElement()
+							.classList.add('!truncate', '!inline-block', '!leading-8', '!max-w-[500px]');
 						return cell.getValue();
 					}
 				},
@@ -206,17 +260,29 @@
 					headerHozAlign: 'center',
 					headerFilter: 'input',
 					headerFilterPlaceholder: 'Search source link',
-					resizable: false
+					resizable: false,
+					formatter: (cell) => {
+						cell
+							.getElement()
+							.classList.add('!truncate', '!inline-block', '!leading-8', '!max-w-[500px]');
+						return cell.getValue();
+					}
 				},
 				{
 					title: 'Demo link',
-					field: 'demoLink',
+					field: 'link',
 					sorter: 'string',
 					vertAlign: 'middle',
 					headerHozAlign: 'center',
 					headerFilter: 'input',
 					headerFilterPlaceholder: 'Search demo link',
-					resizable: false
+					resizable: false,
+					formatter: (cell) => {
+						cell
+							.getElement()
+							.classList.add('!truncate', '!inline-block', '!leading-8', '!max-w-[500px]');
+						return cell.getValue();
+					}
 				},
 				{
 					title: ' ',
@@ -259,9 +325,9 @@
 					id: cell.getRow().getData().id,
 					table: tabulatorTable,
 					modalStore,
-					typeOfData: typeOfDataEditMotto,
-					meta: editMottoMetaData,
-					preFetchDataEndpoint: '/api/motto/getByMottoId'
+					typeOfData: typeOfDataEditProject,
+					meta: editProjectMetaData,
+					preFetchDataEndpoint: '/api/project/getByProjectId'
 				}
 			});
 			new DeleteButton({
@@ -270,9 +336,9 @@
 					id: cell.getRow().getData().id,
 					table: tabulatorTable,
 					modalStore,
-					typeOfData: typeOfDataDeleteMotto,
-					meta: deleteMottoMetaData,
-					preFetchDataEndpoint: '/api/motto/getByMottoId'
+					typeOfData: typeOfDataDeleteProject,
+					meta: deleteProjectMetaData,
+					preFetchDataEndpoint: '/api/project/getByProjectId'
 				}
 			});
 		});
@@ -283,22 +349,22 @@
 		createModal: {
 			ref: CreateModal,
 			props: {
-				typeOfData: typeOfDataCreateMotto,
-				schema: mottoCreateSchema
+				typeOfData: typeOfDataCreateProject,
+				schema: projectCreateSchema
 			}
 		},
 		editModal: {
 			ref: EditModal,
 			props: {
-				typeOfData: typeOfDataEditMotto,
-				schema: mottoUpdateSchema
+				typeOfData: typeOfDataEditProject,
+				schema: projectUpdateSchema
 			}
 		},
 		deleteModal: {
 			ref: DeleteModal,
 			props: {
-				typeOfData: typeOfDataDeleteMotto,
-				schema: mottoDeleteSchema
+				typeOfData: typeOfDataDeleteProject,
+				schema: projectDeleteSchema
 			}
 		}
 	};
@@ -312,8 +378,8 @@
 		<CreateButton
 			table={tabulatorTable}
 			{modalStore}
-			typeOfData={typeOfDataCreateMotto}
-			meta={createMottoMetaData}
+			typeOfData={typeOfDataCreateProject}
+			meta={createProjectMetaData}
 		>
 			<span>New Project</span>
 		</CreateButton>

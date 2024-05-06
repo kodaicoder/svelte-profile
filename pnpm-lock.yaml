@@ -38,6 +38,9 @@ importers:
       oslo:
         specifier: ^1.2.0
         version: 1.2.0
+      svelte-french-toast:
+        specifier: ^1.2.0
+        version: 1.2.0(svelte@4.2.12)
       sweetalert2:
         specifier: ^11.10.7
         version: 11.10.7
@@ -2477,6 +2480,11 @@ packages:
       svelte:
         optional: true
 
+  svelte-french-toast@1.2.0:
+    resolution: {integrity: sha512-5PW+6RFX3xQPbR44CngYAP1Sd9oCq9P2FOox4FZffzJuZI2mHOB7q5gJBVnOiLF5y3moVGZ7u2bYt7+yPAgcEQ==}
+    peerDependencies:
+      svelte: ^3.57.0 || ^4.0.0
+
   svelte-hamburgers@4.2.0:
     resolution: {integrity: sha512-6Iq0uHXHeQZMvsn6Ft84qdSpf+PfmhwdyuSVoJeGHG6UfazB5ffJoMmahs9y9THAtvnBl+Hzus5BOy80PzWy0w==}
     peerDependencies:
@@ -2529,6 +2537,11 @@ packages:
     resolution: {integrity: sha512-762k01kIU+IyXfe5f2MEYQ1yIfJZfueAEmJNbO36cxJG56/vciHiWacPQLnSECK/4cvlH/Ll1Mv6B45InMJ1zg==}
     peerDependencies:
       svelte: '>=3.47.x'
+
+  svelte-writable-derived@3.1.1:
+    resolution: {integrity: sha512-w4LR6/bYZEuCs7SGr+M54oipk/UQKtiMadyOhW0PTwAtJ/Ai12QS77sLngEcfBx2q4H8ZBQucc9ktSA5sUGZWw==}
+    peerDependencies:
+      svelte: ^3.2.1 || ^4.0.0-next.1 || ^5.0.0-next.94
 
   svelte@4.2.12:
     resolution: {integrity: sha512-d8+wsh5TfPwqVzbm4/HCXC783/KPHV60NvwitJnyTA5lWn1elhXMNWhXGCJ7PwPa8qFUnyJNIyuIRt2mT0WMug==}
@@ -4915,6 +4928,11 @@ snapshots:
     optionalDependencies:
       svelte: 4.2.12
 
+  svelte-french-toast@1.2.0(svelte@4.2.12):
+    dependencies:
+      svelte: 4.2.12
+      svelte-writable-derived: 3.1.1(svelte@4.2.12)
+
   svelte-hamburgers@4.2.0(svelte@4.2.12):
     dependencies:
       svelte: 4.2.12
@@ -4939,6 +4957,10 @@ snapshots:
   svelte-typewriter@3.2.3(svelte@4.2.12):
     dependencies:
       '@formatjs/intl-segmenter': 11.5.5
+      svelte: 4.2.12
+
+  svelte-writable-derived@3.1.1(svelte@4.2.12):
+    dependencies:
       svelte: 4.2.12
 
   svelte@4.2.12:

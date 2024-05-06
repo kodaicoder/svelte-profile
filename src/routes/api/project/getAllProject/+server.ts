@@ -2,7 +2,7 @@ import type { RequestHandler } from './$types';
 import prisma from '$lib/prismaInstance/prismaClient';
 
 export const GET: RequestHandler = async () => {
-	const socialLinks = await dataAccess()
+	const projects = await dataAccess()
 		.then(async (data) => {
 			await prisma.$disconnect();
 			return data;
@@ -13,29 +13,24 @@ export const GET: RequestHandler = async () => {
 			process.exit(1);
 		});
 
-	return new Response(JSON.stringify(socialLinks));
+	return new Response(JSON.stringify(projects));
 };
 
 const dataAccess = async () => {
-	return await prisma.user.findFirst({
-		where: {
-			role: 'ADMIN'
+	return await prisma.project.findMany({
+		orderBy: {
+			id: 'asc'
 		},
-		select: {
-			socialLinks: {
+		include: {
+			image: {
 				where: {
 					isActive: true
-				},
-				orderBy: {
-					id: 'asc'
-				},
-				include: {
-					image: {
-						where: {
-							isActive: true
-						}
-					}
 				}
+			}
+		},
+		where: {
+			user: {
+				role: 'ADMIN'
 			}
 		}
 	});

@@ -3,7 +3,13 @@
 	import type { CustomModalSettings } from '$lib/types/IModal';
 
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import { superForm, type Infer, type SuperValidated, defaults } from 'sveltekit-superforms';
+	import {
+		superForm,
+		type Infer,
+		type SuperValidated,
+		defaults,
+		fileProxy
+	} from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import Swal from 'sweetalert2';
 	import ErrorMessage from '$lib/components/generic/ErrorMessage.svelte';
@@ -14,6 +20,17 @@
 	export let typeOfData: any;
 	export let schema: any;
 
+	let fileInputMeta:
+		| {
+				name: string;
+				element: string;
+				type: string;
+				label?: string | null | undefined;
+				accept?: string[] | null | undefined;
+		  }
+		| undefined;
+
+	let imageStore;
 	let buttonLoadState = false;
 	const modalStore = getModalStore();
 	const data: CustomModalSettings<typeof typeOfData> = $modalStore[0];
@@ -24,6 +41,7 @@
 			validators: zod(schema),
 			invalidateAll: false,
 			onSubmit: () => {
+				console.log('submit');
 				buttonLoadState = true;
 			},
 			onUpdate: ({ form }) => {
@@ -62,6 +80,13 @@
 		}
 	);
 
+	$: {
+		fileInputMeta = data.meta?.form?.children.find((item) => item.type === 'file');
+		if (fileInputMeta) {
+			imageStore = fileProxy(form, `${fileInputMeta.name}`);
+		}
+	}
+
 	function handdleCloseModal() {
 		reset();
 		modalStore.close();
@@ -72,11 +97,13 @@
 	<div class="card w-modal space-y-4 p-4 shadow-xl">
 		<header class="text-2xl font-bold">{data.meta?.title}</header>
 		<!-- Enable for debugging: -->
+		<!--  -->
 		<form
 			id={data.meta?.form?.name}
 			name={data.meta?.form?.name}
 			method={data.meta?.form?.method}
 			action={data.meta?.form?.action}
+			enctype={fileInputMeta ? 'multipart/form-data' : 'application/x-www-form-urlencoded'}
 			class="modal-form space-y-4 border border-surface-500 p-4 rounded-container-token"
 			use:enhance
 		>
@@ -85,12 +112,50 @@
 					{#if item.element === 'input'}
 						{#if item.type === 'hidden'}
 							<input type="hidden" name={item.name} bind:value={$form[item.name]} />
+						{:else if item.type === 'file'}
+							<div class="flex gap-4">
+								<label class="label relative" for={item.name}>
+									<span
+										>{item.label}
+										{#if $errors[item.name]}
+											<ErrorMessage
+												class="absolute -top-2 right-2"
+												errorMessage={$errors[item.name]
+													? $errors[item.name][$errors[item.name].length - 1]
+													: ''}
+											/>
+										{/if}</span
+									>
+									{#if item.maxSize}
+										<small class="ml-2"
+											>{`(size <= ${item.maxSize >= 1000000 ? item.maxSize / 1000000 + ` mb` : item.maxSize + ` kb`})`}</small
+										>
+									{/if}
+									<input
+										id={item.name}
+										name={item.name}
+										class="input"
+										type="file"
+										accept={item.accept?.join(',')}
+										aria-invalid={$errors[item.name] ? 'true' : undefined}
+										bind:files={$imageStore}
+									/>
+								</label>
+								{#if $form[item.name]}
+									<img
+										src={URL.createObjectURL($form[item.name])}
+										alt="preview"
+										class="h-20 w-20 object-cover"
+									/>
+								{/if}
+							</div>
 						{:else}
 							<label class="label relative" for={item.name}>
-								<span class="relative">
+								<span class="">
 									{item.label}
 									{#if $errors[item.name]}
 										<ErrorMessage
+											class="absolute -top-2 right-2"
 											errorMessage={$errors[item.name]
 												? $errors[item.name][$errors[item.name].length - 1]
 												: ''}
@@ -109,11 +174,12 @@
 							</label>
 						{/if}
 					{:else if item.element === 'textarea'}
-						<label class="label" for={item.name}>
-							<span class="relative">
+						<label class="label relative" for={item.name}>
+							<span>
 								{item.label}
 								{#if $errors[item.name]}
 									<ErrorMessage
+										class="absolute -top-2 right-2"
 										errorMessage={$errors[item.name]
 											? $errors[item.name][$errors[item.name].length - 1]
 											: ''}
@@ -133,45 +199,6 @@
 					{/if}
 				{/each}
 			{/if}
-			<!-- <input type="hidden" name="id" bind:value={$form.id} />
-			<label class="label" for="content">
-				<span class="relative">
-					Content
-					{#if $errors.content}
-						<ErrorMessage
-							errorMessage={$errors.content ? $errors.content[$errors.content.length - 1] : ''}
-						/>
-					{/if}
-				</span>
-				<textarea
-					id="content"
-					name="content"
-					class="textarea"
-					rows="6"
-					aria-invalid={$errors.content ? 'true' : undefined}
-					bind:value={$form.content}
-					placeholder="Enter content..."
-				/>
-			</label>
-			<label class="label relative" for="author">
-				<span class="relative">
-					Author name
-					{#if $errors.author}
-						<ErrorMessage
-							errorMessage={$errors.author ? $errors.author[$errors.author.length - 1] : ''}
-						/>
-					{/if}
-				</span>
-				<input
-					id="author"
-					name="author"
-					class="input"
-					type="text"
-					aria-invalid={$errors.author ? 'true' : undefined}
-					bind:value={$form.author}
-					placeholder="Enter author name..."
-				/>
-			</label> -->
 		</form>
 		<!-- prettier-ignore -->
 		<footer class="modal-footer {parent.regionFooter}">

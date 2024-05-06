@@ -1,15 +1,14 @@
 <script lang="ts">
-	import EditIcon from './../../../../lib/components/icons/EditIcon.svelte';
 	import type { IMotto } from '$lib/types/IMotto';
-	import type { CustomModalSettings } from '$lib/types/IModal';
-	import CreateModal from '$lib/components/generic/motto/CreateModal.svelte';
-	import EditModal from '$lib/components/generic/motto/EditModal.svelte';
-	import DeleteModal from '$lib/components/generic/motto/DeleteModal.svelte';
+	import type { PageData } from './$types';
+	import CreateModal from '$lib/components/generic/CreateModal.svelte';
+	import EditModal from '$lib/components/generic/EditModal.svelte';
+	import DeleteModal from '$lib/components/generic/DeleteModal.svelte';
 	import RefreshIcon from '$lib/components/icons/RefreshIcon.svelte';
 	import { TabulatorFull as Tabulator, type CellComponent } from 'tabulator-tables';
 	import { onMount } from 'svelte';
-	import EditButton from '$lib/components/generic/motto/EditButton.svelte';
-	import DeleteButton from '$lib/components/generic/motto/DeleteButton.svelte';
+	import EditButton from '$lib/components/generic/EditButton.svelte';
+	import DeleteButton from '$lib/components/generic/DeleteButton.svelte';
 	import Spinner from '$lib/components/icons/Spinner.svelte';
 	import { Modal, getModalStore, type ModalComponent } from '@skeletonlabs/skeleton';
 	import {
@@ -17,7 +16,7 @@
 		mottoUpdateSchema,
 		mottoDeleteSchema
 	} from '$lib/validators/mottoSchema.js';
-	import CreateButton from '$lib/components/generic/motto/CreateButton.svelte';
+	import CreateButton from '$lib/components/generic/CreateButton.svelte';
 
 	let tableDiv: string | HTMLElement;
 	let tabulatorTable: any;
@@ -36,6 +35,11 @@
 			method: 'POST',
 			action: './motto?/create',
 			children: [
+				{
+					name: 'userId',
+					element: 'input',
+					type: 'hidden'
+				},
 				{
 					name: 'content',
 					element: 'textarea',
@@ -75,6 +79,11 @@
 			method: 'POST',
 			action: './motto?/update',
 			children: [
+				{
+					name: 'userId',
+					element: 'input',
+					type: 'hidden'
+				},
 				{
 					name: 'id',
 					element: 'input',
@@ -119,6 +128,11 @@
 			method: 'POST',
 			action: './motto?/delete',
 			children: [
+				{
+					name: 'userId',
+					element: 'input',
+					type: 'hidden'
+				},
 				{
 					name: 'id',
 					element: 'input',
@@ -165,13 +179,6 @@
 				filter: 'filter'
 			},
 			ajaxURL: `/api/motto/getMottoByParams`,
-			// ajaxResponse: function (url, params, response) {
-			// 	//url - the URL of the request
-			// 	//params - the parameters passed with the request
-			// 	//response - the JSON object returned in the body of the response.
-			// 	console.log(response);
-			// 	return response.tableData; //return the tableData property of a response json object
-			// },
 			columns: [
 				{
 					title: 'Id',

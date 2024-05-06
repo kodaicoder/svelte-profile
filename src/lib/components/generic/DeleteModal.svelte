@@ -29,6 +29,7 @@
 		{
 			validators: zod(schema),
 			invalidateAll: false,
+			dataType: 'json',
 			onSubmit: () => {
 				buttonLoadState = true;
 			},

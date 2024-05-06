@@ -2,9 +2,12 @@ import type { RequestHandler } from './$types';
 import prisma from '$lib/prismaInstance/prismaClient';
 
 export const POST: RequestHandler = async ({ request }: { request: Request }) => {
-	const { id } = await request.json();
+	const { userId, id } = await request.json();
+	if (!userId) {
+		return new Response(JSON.stringify({ message: 'User not found' }), { status: 404 });
+	}
 
-	const motto = await dataAccess(+id)
+	const motto = await dataAccess(+userId, +id)
 		.then(async (data) => {
 			await prisma.$disconnect();
 			return data;
@@ -25,9 +28,10 @@ export const POST: RequestHandler = async ({ request }: { request: Request }) =>
 	);
 };
 
-async function dataAccess(id: number) {
+async function dataAccess(userId: number, id: number) {
 	return await prisma.motto.delete({
 		where: {
+			userId: userId,
 			id: id
 		}
 	});

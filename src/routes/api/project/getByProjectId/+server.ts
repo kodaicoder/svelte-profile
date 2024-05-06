@@ -28,10 +28,13 @@ export const POST: RequestHandler = async ({
 };
 
 async function dataAccess(userId: number, id: number) {
-	return await prisma.motto.findFirst({
+	return await prisma.project.findFirst({
 		where: {
 			userId: userId,
 			id: id
+		},
+		include: {
+			image: true
 		}
 	});
 }

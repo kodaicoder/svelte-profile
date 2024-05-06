@@ -60,6 +60,7 @@
 		"@vercel/speed-insights": "^1.0.10",
 		"axios": "^1.6.8",
 		"oslo": "^1.2.0",
+		"svelte-french-toast": "^1.2.0",
 		"sweetalert2": "^11.10.7",
 		"tabulator-tables": "6.2.0"
 	}

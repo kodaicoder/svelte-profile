@@ -17,7 +17,7 @@
 		mottoUpdateSchema,
 		mottoDeleteSchema
 	} from '$lib/validators/mottoSchema.js';
-	import CreateButton from '$lib/components/generic/motto/CreateButton.svelte';
+	import CreateButton from '$lib/components/generic/CreateButton.svelte';
 
 	let tableDiv: string | HTMLElement;
 	let tabulatorTable: any;

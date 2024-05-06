@@ -19,7 +19,7 @@ export const POST: RequestHandler = async ({ request }: { request: Request }) =>
 			process.exit(1);
 		});
 
-	return new Response(JSON.stringify({ resume }));
+	return new Response(JSON.stringify({ ...resume }));
 };
 
 const dataAccess = async (userId: number, oldResumeUrl: string, uploadResume: File) => {

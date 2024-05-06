@@ -17,7 +17,7 @@
 		const modal: CustomModalSettings<typeof typeOfData> = {
 			type: 'component',
 			component: 'createModal',
-			meta
+			meta: { ...meta }
 		};
 		modalStore.trigger(modal);
 		buttonLoadState = false;

@@ -1,11 +1,17 @@
 import type { RequestHandler } from './$types';
 import prisma from '$lib/prismaInstance/prismaClient';
 import type { IMotto } from '$lib/types/IMotto';
+import { error } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async () => {
+export const GET: RequestHandler = async ({ locals }: { locals: App.Locals }) => {
+	// console.log('GET ALL MOTTO', locals.user?.id);
+
 	let allMotto: IMotto[] | void = [];
+	if (!locals.user) {
+		return error(404, { message: 'User not found' });
+	}
 
-	allMotto = await dataAccess()
+	allMotto = await dataAccess(+locals.user.id)
 		.then(async (data) => {
 			await prisma.$disconnect();
 			return data;
@@ -18,6 +24,10 @@ export const GET: RequestHandler = async () => {
 	return new Response(JSON.stringify(allMotto));
 };
 
-async function dataAccess() {
-	return await prisma.motto.findMany();
+async function dataAccess(userId: number) {
+	return await prisma.motto.findMany({
+		where: {
+			userId
+		}
+	});
 }

@@ -16,7 +16,7 @@ const uploadProfilePicture = z
 export const profilePictureSchema = z.object({
 	id: z.number().int().optional().nullable(),
 	userId: z.number().int().optional().nullable(),
-	url: z.string().url().optional().nullable(),
+	url: z.string().url().optional(),
 	isActive: z.boolean().default(true),
 	uploadImage: uploadProfilePicture.optional()
 });
@@ -30,48 +30,45 @@ export const profileDetailSchema = z.object({
 	role: z.string(),
 	// .enum(['USER', 'ADMIN']),
 	socialLinks: z.array(
-		z
-			.object({
-				id: z.number().int().optional(),
-				userId: z.number().int().optional(),
-				image: z
-					.object({
-						id: z.number().int().optional().nullable(),
-						url: z.string().url(),
-						isActive: z.boolean().default(true),
-						socialLinkId: z.number().int().optional().nullable()
-					})
-					.optional()
-					.nullable(),
-				link: z.string().optional().nullable(),
-				type: z.string()
-				// enum(['GITHUB', 'FACEBOOK', 'TWITTER', 'INSTAGRAM', 'LINE', 'LINKEDIN'])
-			})
-			.optional()
+		z.object({
+			id: z.number().int().optional(),
+			userId: z.number().int().optional(),
+			image: z
+				.object({
+					id: z.number().int().optional().nullable(),
+					url: z.string().url(),
+					isActive: z.boolean().default(true),
+					socialLinkId: z.number().int().optional().nullable()
+				})
+				.optional()
+				.nullable(),
+			link: z.string().optional().nullable(),
+			type: z.string()
+			// enum(['GITHUB', 'FACEBOOK', 'TWITTER', 'INSTAGRAM', 'LINE', 'LINKEDIN'])
+		})
 	),
 	skills: z.array(
-		z
-			.object({
-				id: z.number().int().optional().nullable(),
-				userId: z.number().int().optional().nullable(),
-				name: z.string().max(255),
-				level: z
-					.number()
-					.positive({ message: 'level value must be positive' })
-					.multipleOf(0.5, { message: 'Level must be a multiple of 0.5' }),
-				image: z
-					.object({
-						id: z.number().int().optional().nullable(),
-						skillId: z.number().int().optional().nullable(),
-						url: z.string().url(),
-						isActive: z.boolean().default(true)
-					})
-					.optional()
-					.nullable(),
-				link: z.string().url().optional().nullable(),
-				isActive: z.boolean().default(true)
-			})
-			.optional()
+		z.object({
+			id: z.number().int().optional(),
+			userId: z.number().int().optional().nullable(),
+			name: z.string().max(255),
+			level: z
+				.number()
+				.positive({ message: 'level value must be positive' })
+				.multipleOf(0.5, { message: 'Level must be a multiple of 0.5' }),
+			image: z
+				.object({
+					id: z.number().int().optional().nullable(),
+					skillId: z.number().int().optional().nullable(),
+					url: z.string().url(),
+					isActive: z.boolean().default(true)
+				})
+				.optional()
+				.nullable(),
+
+			link: z.string().url().optional().nullable(),
+			isActive: z.boolean().default(true)
+		})
 	)
 });
 

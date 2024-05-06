@@ -29,7 +29,7 @@ model SkillImage {
   url      String
   isActive Boolean @default(true)
   skillId Int @unique
-  skill    Skill  @relation(fields: [skillId], references: [id])
+  skill    Skill  @relation(fields: [skillId], references: [id],onDelete: Cascade)
 }
 
 model Article {
@@ -38,15 +38,15 @@ model Article {
   user    User           @relation(fields: [userId], references: [id])
   title   String         @db.VarChar(255)
   content String
-  images  AritcleImage[]
+  image  AritcleImage?
   link    String
 }
 
 model AritcleImage {
   id        Int     @id @default(autoincrement())
   url       String
-  articleId Int
-  article   Article @relation(fields: [articleId], references: [id])
+  articleId Int @unique
+  article   Article @relation(fields: [articleId], references: [id],onDelete: Cascade)
   isActive  Boolean @default(true)
 }
 
@@ -55,8 +55,8 @@ model Project {
   userId     Int
   user       User           @relation(fields: [userId], references: [id])
   title      String         @db.VarChar(255)
-  content    String?
-  images     ProjectImage[]
+  content    String
+  image     ProjectImage?
   sourceLink String
   link       String?
 }
@@ -64,8 +64,8 @@ model Project {
 model ProjectImage {
   id        Int     @id @default(autoincrement())
   url       String
-  projectId Int
-  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int @unique
+  project   Project @relation(fields: [projectId], references: [id],onDelete: Cascade)
   isActive  Boolean @default(true)
 }
 
@@ -83,6 +83,7 @@ model User {
   skills   Skill[]
   socialLinks   SocialLink[]
   resume  Resume?
+  motto   Motto[]
 }
 
 model Resume {
@@ -97,7 +98,7 @@ model Resume {
 model UserImage {
   id       Int     @id @default(autoincrement())
   userId  Int @unique
-  user    User    @relation(fields: [userId], references: [id])
+  user    User    @relation(fields: [userId], references: [id],onDelete: Cascade)
   url      String
   isActive Boolean @default(true)
 }
@@ -111,6 +112,8 @@ model Session {
 
 model Motto {
   id      Int     @id @default(autoincrement())
+  userId  Int    
+  user    User    @relation(fields: [userId], references: [id])
   content String  @db.VarChar(1000)
   author  String? @db.VarChar(250)
 }
@@ -130,6 +133,6 @@ model SocialLinkImage {
   url      String
   isActive Boolean @default(true)
   socialLinkId   Int     @unique
-  socialLink     SocialLink @relation(fields: [socialLinkId], references: [id])
+  socialLink     SocialLink @relation(fields: [socialLinkId], references: [id],onDelete: Cascade)
 }
 

@@ -11,9 +11,8 @@ import type { IMotto } from '$lib/types/IMotto';
 import axios from 'axios';
 
 export const actions: Actions = {
-	create: async ({ request }) => {
+	create: async ({ request, locals, fetch }) => {
 		const mottoCreateForm = await superValidate(request, zod(mottoCreateSchema));
-
 		if (!mottoCreateForm.valid) {
 			return fail(400, { mottoCreateForm });
 		}
@@ -21,7 +20,7 @@ export const actions: Actions = {
 		const { content, author } = mottoCreateForm.data;
 
 		const motto = await axios
-			.post<IMotto | null>(`/api/motto/createMotto`, { content, author })
+			.post<IMotto | null>(`/api/motto/createMotto`, { content, author, userId: locals?.user?.id })
 			.then(async (response) => {
 				return response.data;
 			})
@@ -33,10 +32,32 @@ export const actions: Actions = {
 				});
 			});
 
-		mottoCreateForm.message = motto ? `Motto created` : 'Motto not created';
-		return { mottoCreateForm };
+		// try {
+		// 	const response = await fetch('/api/motto/createMotto', {
+		// 		method: 'POST',
+		// 		headers: {
+		// 			'Content-Type': 'application/json'
+		// 		},
+		// 		body: JSON.stringify({ content, author, userId: locals?.user?.id })
+		// 	});
+
+		// 	if (!response.ok) {
+		// 		const { status, statusText } = response;
+		// 		const data = await response.json();
+		// 		throw error(400, {
+		// 			message: JSON.stringify({ status, statusText, data })
+		// 		});
+		// 	}
+
+		// 	const motto: IMotto | null = await response.json();
+		// 	mottoCreateForm.message = motto ? `Motto created` : 'Motto not created';
+		// 	return { mottoCreateForm };
+		// } catch (e) {
+		// 	console.error(e);
+		// 	throw e;
+		// }
 	},
-	update: async ({ request }) => {
+	update: async ({ request, locals }) => {
 		const mottoEditForm = await superValidate(request, zod(mottoUpdateSchema));
 
 		console.log(mottoEditForm);
@@ -48,7 +69,12 @@ export const actions: Actions = {
 		const { id, content, author } = mottoEditForm.data;
 
 		const motto = await axios
-			.post<IMotto | null>(`/api/motto/updateMotto`, { id, content, author })
+			.post<IMotto | null>(`/api/motto/updateMotto`, {
+				id,
+				content,
+				author,
+				userId: locals?.user?.id
+			})
 			.then(async (response) => {
 				return response.data;
 			})
@@ -64,7 +90,7 @@ export const actions: Actions = {
 		mottoEditForm.message = motto ? `Motto updated` : 'Motto not found';
 		return { mottoEditForm };
 	},
-	delete: async ({ request }) => {
+	delete: async ({ request, locals }) => {
 		const mottoDeleteForm = await superValidate(request, zod(mottoDeleteSchema));
 
 		if (!mottoDeleteForm.valid) {
@@ -74,7 +100,7 @@ export const actions: Actions = {
 		const { id } = mottoDeleteForm.data;
 
 		const motto = await axios
-			.post<IMotto | null>(`/api/motto/deleteMotto`, { id })
+			.post<IMotto | null>(`/api/motto/deleteMotto`, { id, userId: locals?.user?.id })
 			.then(async (response) => {
 				return response.data;
 			})

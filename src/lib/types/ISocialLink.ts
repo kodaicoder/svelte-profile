@@ -1,5 +1,5 @@
 import type { SocialLink, SocialLinkImage } from '@prisma/client';
 
-export default interface ISocialLink extends Required<SocialLink & SocialLinkImage> {
+export default interface ISocialLink extends SocialLink {
 	image: SocialLinkImage;
 }

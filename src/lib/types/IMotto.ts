@@ -1,5 +1,3 @@
-export interface IMotto {
-	id: number;
-	content: string;
-	author?: string | null;
-}
+import type { Motto } from '@prisma/client';
+
+export interface IMotto extends Motto {}

@@ -16,7 +16,7 @@
 
 	async function handleClick() {
 		buttonLoadState = true;
-		const motto = await axios
+		const initialData = await axios
 			.post<typeof typeOfData | null>(preFetchDataEndpoint, { id })
 			.then((response) => {
 				return response.data;
@@ -24,11 +24,11 @@
 			.catch((error) => {
 				console.log(error);
 			});
-		if (motto) {
+		if (initialData) {
 			const modal: CustomModalSettings<typeof typeOfData> = {
 				type: 'component',
 				component: 'editModal',
-				meta: { ...meta, initialData: motto }
+				meta: { ...meta, initialData }
 			};
 			modalStore.trigger(modal);
 		}

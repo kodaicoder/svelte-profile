@@ -16,6 +16,8 @@ export interface IMetaData<T> {
 			element: string;
 			type: string;
 			label?: string | null;
+			accept?: string[] | null;
+			maxSize?: number | null;
 		}[];
 	};
 	button: {
