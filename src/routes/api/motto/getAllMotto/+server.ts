@@ -5,11 +5,12 @@ import { error } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ locals }: { locals: App.Locals }) => {
 	let allMotto: IMotto[] | void = [];
-	if (!locals.user) {
-		return error(404, { message: 'User not found' });
-	}
+	// if (!locals.user) {
+	// 	return error(404, { message: 'User not found' });
+	// }
 
-	allMotto = await dataAccess(+locals.user.id)
+	// allMotto = await dataAccess(+locals.user.id)
+	allMotto = await dataAccess()
 		.then(async (data) => {
 			await prisma.$disconnect();
 			return data;
@@ -22,10 +23,12 @@ export const GET: RequestHandler = async ({ locals }: { locals: App.Locals }) =>
 	return new Response(JSON.stringify(allMotto));
 };
 
-async function dataAccess(userId: number) {
+async function dataAccess() {
 	return await prisma.motto.findMany({
 		where: {
-			userId
+			user: {
+				id: 2
+			}
 		}
 	});
 }

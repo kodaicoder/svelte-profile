@@ -40,7 +40,7 @@
 			isTopNavShowStore.set(true);
 			isShowToTopButton = false;
 		}
-		// isTopNavShowStore.set(currentFromTop < previousFromTop);
+
 		previousFromTop = currentFromTop;
 	}
 
@@ -64,10 +64,6 @@
 	<div class="mx-6 md:mx-24">
 		<slot {socialLinkList} />
 	</div>
-
-	<!-- <svelte:fragment slot="pageFooter">
-		<FooterBar {socialLinkList} />
-	</svelte:fragment> -->
 </AppShell>
 {#if isShowToTopButton}
 	<ToTopButton />

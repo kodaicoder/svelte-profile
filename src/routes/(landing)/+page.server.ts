@@ -10,16 +10,17 @@ import type IArticle from '$lib/types/IArticle';
 export const load = (async ({ locals }) => {
 	const user = locals.user;
 
-	const [imageUrl, skills, resumeUrl, socialLinks, projects, articles] = await Promise.all([
+	const [imageUrl, skills, resumeUrl, socialLinks, projects, articles, email] = await Promise.all([
 		getProfilePicture(),
 		getSkills(),
 		getResumeUrl(),
 		getSocialLinks(),
 		getAllProject(),
-		getAllArticle()
+		getAllArticle(),
+		getEmail()
 	]);
 
-	return { user, imageUrl, skills, resumeUrl, socialLinks, projects, articles };
+	return { user, imageUrl, skills, resumeUrl, socialLinks, projects, articles, email };
 }) satisfies PageServerLoad;
 
 async function getProfilePicture() {
@@ -101,6 +102,20 @@ async function getAllArticle() {
 		.get<IArticle[]>('/api/article/getAllArticle/')
 		.then((response) => {
 			return response.data;
+		})
+		.catch((err) => {
+			const { status, statusText, data } = err;
+			throw error(404, {
+				message: JSON.stringify({ status, statusText, data })
+			});
+		});
+}
+
+async function getEmail() {
+	return await axios
+		.get<{ email: string }>('/api/landing/getEmail/')
+		.then((response) => {
+			return response.data.email;
 		})
 		.catch((err) => {
 			const { status, statusText, data } = err;

@@ -8,20 +8,20 @@
 	import { isHamburgerMenuOpenStore } from '$lib/stores/IsHamburgerMenuOpenStore';
 
 	import { page } from '$app/stores';
+	import axios from 'axios';
+	import { onDestroy, onMount } from 'svelte';
 
 	$: if (!$isMobileStore) isHamburgerMenuOpenStore.set(false);
 
 	let windowWidth: number;
 
 	export let socialLinkList: ISocialLink[];
-
-	socialLinkList = [
+	$: socialLinkList = [
 		...socialLinkList,
 		{
 			id: 0,
-			userId: $page.data.user.id,
-			type: 'EMAIL',
-			link: $page.data.user.email,
+			userId: 0,
+			link: $page.data.email,
 			isActive: true,
 			image: {
 				id: 0,
@@ -34,12 +34,7 @@
 </script>
 
 <svelte:window bind:outerWidth={windowWidth} />
-<!-- <AppBar
-	regionRowMain="mt-4"
-	gridColumns="grid-cols-1"
-	slotDefault="place-self-center"
-	border="neon !rounded-none !border-0 !border-t-2"
-> -->
+
 <div class="footer">
 	<div class="my-8 flex justify-center">
 		<hr class="neon w-full" />
