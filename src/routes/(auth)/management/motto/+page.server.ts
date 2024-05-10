@@ -60,8 +60,6 @@ export const actions: Actions = {
 	update: async ({ request, locals }) => {
 		const mottoEditForm = await superValidate(request, zod(mottoUpdateSchema));
 
-		console.log(mottoEditForm);
-
 		if (!mottoEditForm.valid) {
 			return fail(400, { mottoEditForm });
 		}
@@ -86,7 +84,6 @@ export const actions: Actions = {
 				});
 			});
 
-		console.log(motto?.id);
 		mottoEditForm.message = motto ? `Motto updated` : 'Motto not found';
 		return { mottoEditForm };
 	},

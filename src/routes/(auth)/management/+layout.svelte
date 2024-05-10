@@ -41,7 +41,7 @@
 		<NavigationBar {menuList} isAuth={true} isAdmin={data.isAdmin} />
 	</svelte:fragment>
 
-	<div class="mx-4 mt-4 md:mx-16">
+	<div class="mx-4 my-4 md:mx-16">
 		<slot />
 	</div>
 </AppShell>

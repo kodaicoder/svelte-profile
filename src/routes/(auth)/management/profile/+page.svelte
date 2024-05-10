@@ -14,6 +14,7 @@
 	import ErrorMessage from '$lib/components/generic/ErrorMessage.svelte';
 	import DeleteIcon from '$lib/components/icons/DeleteIcon.svelte';
 	import RefreshIcon from '$lib/components/icons/RefreshIcon.svelte';
+	import { tick } from 'svelte';
 
 	export let data: PageData;
 	let buttonLoadState = false;
@@ -60,7 +61,8 @@
 	const {
 		form: profileDetailForm,
 		enhance: profileDetailEnhance,
-		errors: profileDetailErrors
+		errors: profileDetailErrors,
+		validateForm: validateProfileDetailForm
 	} = superForm(data.profileDetailForm, {
 		dataType: 'json',
 		resetForm: false,
@@ -149,43 +151,87 @@
 	async function changeSkillImage(skillId: number | undefined) {
 		const fileInputElement = document.getElementById(`skillIcon${skillId}`);
 		if (fileInputElement) {
-			fileInputElement.addEventListener('input', (event) => {
-				const files = (<HTMLInputElement>event.currentTarget).files;
-				if (!files || files?.length === 0) return;
-				const selectedFile = files[0];
-				/// check selected file is ok ?
-				//! if not return error
-				//? if yes then upload file to vercel and then update the url in the form store
-
-				console.log('Selected file:', selectedFile);
-			});
 			fileInputElement.click();
 		}
+	}
+
+	async function addSkill() {
+		const maxId = Math.max(...$profileDetailForm.skills.map((skill) => skill.id));
+		const newId = maxId + 1;
+		profileDetailForm.update(($profileDetailForm) => {
+			$profileDetailForm.skills = [
+				...$profileDetailForm.skills,
+				{
+					id: newId,
+					name: '',
+					link: null,
+					level: 0.5,
+					image: null,
+					uploadImage: null,
+					isActive: true
+				}
+			];
+			return $profileDetailForm;
+		});
+
+		await tick();
+		document.getElementById('skillIconBtn' + newId)?.focus();
+	}
+
+	async function deleteSkill(skillIndex: number) {
+		profileDetailForm.update(($profileDetailForm) => {
+			$profileDetailForm.skills = $profileDetailForm.skills.filter((_, idx) => idx !== skillIndex);
+			return $profileDetailForm;
+		});
+
+		profileDetailErrors.update(($profileDetailErrors) => {
+			if ($profileDetailErrors?.skills) {
+				$profileDetailErrors.skills = undefined;
+			}
+			return $profileDetailErrors;
+		});
 	}
 
 	async function changeSocialImage(socialLinkId: number | undefined) {
-		const fileInputElement = document.getElementById(`socialIcon${socialLinkId}`);
+		const fileInputElement = document.getElementById(`socialLinkIcon${socialLinkId}`);
 		if (fileInputElement) {
-			fileInputElement.addEventListener('input', (event) => {
-				const files = (<HTMLInputElement>event.currentTarget).files;
-				if (!files || files?.length === 0) return;
-				const selectedFile = files[0];
-				/// check selected file is ok ?
-				//! if not return error
-				//? if yes then upload file to vercel and then update the url in the form store
-
-				console.log('Selected file:', selectedFile);
-			});
 			fileInputElement.click();
 		}
 	}
+	async function addSocialLink() {
+		const maxId = Math.max(...$profileDetailForm.socialLinks.map((socialLink) => socialLink.id));
+		const newId = maxId + 1;
+		profileDetailForm.update(($profileDetailForm) => {
+			$profileDetailForm.socialLinks = [
+				...$profileDetailForm.socialLinks,
+				{
+					id: newId,
+					link: '',
+					image: null,
+					uploadImage: null,
+					isActive: true
+				}
+			];
+			return $profileDetailForm;
+		});
 
-	async function deleteSkill(skillId: number | undefined) {
-		console.log('Delete skill:', skillId);
+		await tick();
+		document.getElementById('socialLinkIconBtn' + newId)?.focus();
 	}
+	async function deleteSocialLink(socialLinkIndex: number) {
+		profileDetailForm.update(($profileDetailForm) => {
+			$profileDetailForm.socialLinks = $profileDetailForm.socialLinks.filter(
+				(_, idx) => idx !== socialLinkIndex
+			);
+			return $profileDetailForm;
+		});
 
-	async function deleteSocialLink(socialLinkId: number | undefined) {
-		console.log('Delete social link:', socialLinkId);
+		profileDetailErrors.update(($profileDetailErrors) => {
+			if ($profileDetailErrors?.socialLinks) {
+				$profileDetailErrors.socialLinks = undefined;
+			}
+			return $profileDetailErrors;
+		});
 	}
 </script>
 
@@ -252,6 +298,7 @@
 		name="profileDetailForm"
 		method="POST"
 		action="?/profileDetailUpdate"
+		enctype="multipart/form-data"
 		class="flex flex-col items-center justify-center gap-6"
 		use:profileDetailEnhance
 	>
@@ -265,7 +312,16 @@
 					type="email"
 					placeholder="Enter email..."
 					bind:value={$profileDetailForm.email}
+					aria-invalid={$profileDetailErrors.email ? 'true' : undefined}
 				/>
+
+				{#if $profileDetailErrors.email}
+					<ErrorMessage
+						errorMessage={$profileDetailErrors.email
+							? $profileDetailErrors.email[$profileDetailErrors.email.length - 1]
+							: ''}
+					/>
+				{/if}
 			</label>
 			<div></div>
 			<label class="label relative" for="firstName">
@@ -277,7 +333,15 @@
 					type="text"
 					placeholder="Enter first name..."
 					bind:value={$profileDetailForm.firstName}
+					aria-invalid={$profileDetailErrors.firstName ? 'true' : undefined}
 				/>
+				{#if $profileDetailErrors.firstName}
+					<ErrorMessage
+						errorMessage={$profileDetailErrors.firstName
+							? $profileDetailErrors.firstName[$profileDetailErrors.firstName.length - 1]
+							: ''}
+					/>
+				{/if}
 			</label>
 			<label class="label relative" for="lastName">
 				<span class="relative"> Last Name </span>
@@ -288,36 +352,83 @@
 					type="text"
 					placeholder="Enter last name..."
 					bind:value={$profileDetailForm.lastName}
+					aria-invalid={$profileDetailErrors.lastName ? 'true' : undefined}
 				/>
+				{#if $profileDetailErrors.lastName}
+					<ErrorMessage
+						errorMessage={$profileDetailErrors.lastName
+							? $profileDetailErrors.lastName[$profileDetailErrors.lastName.length - 1]
+							: ''}
+					/>
+				{/if}
 			</label>
 		</div>
 		<div class="flex w-full flex-col px-2 md:max-w-3xl">
-			<h3 class="mb-4 self-start">Skill</h3>
-			<ul class="flex max-h-[400px] flex-col gap-4 overflow-auto">
-				{#each $profileDetailForm.skills as skill (skill.id)}
-					<li class="flex items-center justify-center gap-4">
+			<div class="just flex items-center">
+				<h3 class=" self-start">Skill</h3>
+				<button type="button" class="variant-filled-success btn btn-sm ml-auto" on:click={addSkill}
+					>add skill</button
+				>
+			</div>
+			<ul class="mt-4 flex max-h-[400px] flex-col gap-4 overflow-auto">
+				{#each $profileDetailForm.skills as skill, idx (skill.id)}
+					<li class="relative flex items-center justify-center gap-4">
 						<input
 							id={`skillIcon${skill.id}`}
+							name="uploadImage"
 							type="file"
-							class="invisible hidden size-0 opacity-0"
+							class="invisible size-0 opacity-0"
+							aria-invalid={$profileDetailErrors.skills &&
+							$profileDetailErrors.skills[idx]?.uploadImage
+								? true
+								: undefined}
+							on:input={(e) => (skill.uploadImage = e.currentTarget.files?.item(0))}
 						/>
 						<button
+							id={`skillIconBtn${skill.id}`}
 							type="button"
-							class="group relative h-12 min-w-12 rounded-full p-2 hover:bg-slate-400"
-							title="change image"
+							class="group relative h-12 min-w-12 rounded-full bg-surface-500 p-2 hover:bg-slate-400"
+							class:border-2={$profileDetailErrors.skills &&
+								$profileDetailErrors.skills[idx]?.uploadImage}
+							class:border-primary-500={$profileDetailErrors.skills &&
+								$profileDetailErrors.skills[idx]?.uploadImage}
+							title={$profileDetailErrors?.skills?.[idx]?.uploadImage?.[0] ?? 'change image'}
 							on:click={() => changeSkillImage(skill.id)}
 						>
 							<RefreshIcon
-								class="absolute left-1/2 top-1/2 z-10 hidden size-6 -translate-x-1/2 -translate-y-1/2 text-slate-800 group-hover:block"
+								class="absolute left-1/2 top-1/2 z-10 hidden size-6 -translate-x-1/2 -translate-y-1/2 text-slate-800 group-hover:block "
 							/>
-							<img
-								src={skill.image?.url}
-								alt={skill.name}
-								class="size-full object-contain group-hover:opacity-30"
-							/>
+							{#if skill.uploadImage}
+								<img
+									src={URL.createObjectURL(skill.uploadImage)}
+									alt={skill.name}
+									class="size-full object-contain group-hover:opacity-30"
+								/>
+							{:else if skill.image?.url}
+								<img
+									id={`skillImage${skill.id}`}
+									src={skill.image?.url}
+									alt={skill.name}
+									class="size-full object-contain group-hover:opacity-30"
+								/>
+							{/if}
 						</button>
-						<input type="text" name="name" class="input" bind:value={skill.name} />
-						<input type="text" name="link" class="input" bind:value={skill.link} />
+						<input
+							type="text"
+							name="name"
+							class="input"
+							bind:value={skill.name}
+							aria-invalid={$profileDetailErrors?.skills?.[idx]?.name ? true : undefined}
+							title={$profileDetailErrors?.skills?.[0]?.name?.[0] ?? 'skill name'}
+						/>
+						<input
+							type="text"
+							name="link"
+							class="input"
+							bind:value={skill.link}
+							aria-invalid={$profileDetailErrors?.skills?.[idx]?.link ? true : undefined}
+							title={$profileDetailErrors?.skills?.[0]?.link?.[0] ?? 'link name'}
+						/>
 						<input
 							type="number"
 							step="0.5"
@@ -325,11 +436,22 @@
 							max="5"
 							name="level"
 							class="input"
+							on:blur={() => {
+								if (skill.level <= 0) skill.level = 0.5;
+								if (skill.level > 5) skill.level = 5;
+								skill.level % 1 > 0.4 && skill.level / 5 < 1
+									? (skill.level = Math.floor(skill.level) + 0.5)
+									: (skill.level = Math.floor(skill.level));
+								return skill.level;
+							}}
 							bind:value={skill.level}
+							aria-invalid={$profileDetailErrors?.skills?.[idx]?.level ? true : undefined}
+							title={$profileDetailErrors?.skills?.[0]?.level?.[0] ?? 'level for skill'}
 						/>
 						<button
+							type="button"
 							class="variant-ringed-error btn-icon p-2 hover:bg-red-900"
-							on:click={() => deleteSkill(skill.id)}
+							on:click={() => deleteSkill(idx)}
 						>
 							<DeleteIcon class="size-6" />
 						</button>
@@ -338,36 +460,77 @@
 			</ul>
 		</div>
 		<div class="flex w-full flex-col px-2 md:max-w-3xl">
-			<h3 class="mb-4 self-start">Social Link</h3>
-			<ul class="flex flex-col gap-4">
-				{#each $profileDetailForm.socialLinks as socialLink (socialLink.id)}
-					{#if socialLink.type.toUpperCase() !== 'EMAIL'}
-						<li class="flex items-center justify-center gap-4 pr-[1.1rem]">
-							<button
-								type="button"
-								class="group relative h-12 min-w-12 rounded-full p-2 hover:bg-slate-400"
-								title="change image"
-								on:click={() => changeSocialImage(socialLink.id)}
-							>
-								<RefreshIcon
-									class="absolute left-1/2 top-1/2 z-10 hidden size-6 -translate-x-1/2 -translate-y-1/2 text-slate-800 group-hover:block"
-								/>
+			<div class="just flex items-center">
+				<h3 class=" self-start">Social Link</h3>
+				<button
+					type="button"
+					class="variant-filled-success btn btn-sm ml-auto"
+					on:click={addSocialLink}>add social link</button
+				>
+			</div>
+			<ul class="mt-4 flex max-h-[400px] flex-col gap-4 overflow-auto">
+				{#each $profileDetailForm.socialLinks as socialLink, idx (socialLink.id)}
+					<li class="flex items-center justify-center gap-4 pr-[1.1rem]">
+						<input
+							id={`socialLinkIcon${socialLink.id}`}
+							name="uploadImage"
+							type="file"
+							class="invisible size-0 opacity-0"
+							accept=".svg"
+							aria-invalid={$profileDetailErrors.socialLinks &&
+							$profileDetailErrors.socialLinks[idx]?.uploadImage
+								? true
+								: undefined}
+							on:input={(e) => (socialLink.uploadImage = e.currentTarget.files?.item(0))}
+						/>
+
+						<button
+							id={`socialLinkIconBtn${socialLink.id}`}
+							type="button"
+							class="group relative h-12 min-w-12 rounded-full bg-surface-600 p-2 hover:bg-slate-400"
+							class:border-2={$profileDetailErrors.socialLinks &&
+								$profileDetailErrors.socialLinks[idx]?.uploadImage}
+							class:border-primary-500={$profileDetailErrors.socialLinks &&
+								$profileDetailErrors.socialLinks[idx]?.uploadImage}
+							title={$profileDetailErrors?.socialLinks?.[idx]?.uploadImage?.[0] ?? 'change image'}
+							on:click={() => changeSocialImage(socialLink.id)}
+						>
+							<RefreshIcon
+								class="absolute left-1/2 top-1/2 z-10 hidden size-6 -translate-x-1/2 -translate-y-1/2 text-slate-800 group-hover:block "
+							/>
+							{#if socialLink.uploadImage}
 								<img
-									src={socialLink.image?.url}
-									alt={socialLink.type}
+									src={URL.createObjectURL(socialLink.uploadImage)}
+									alt={socialLink.link}
 									class="social-icon size-full object-contain group-hover:opacity-30"
 								/>
-							</button>
+							{:else if socialLink.image?.url}
+								<img
+									id={`socialLinkImage${socialLink.id}`}
+									src={socialLink.image?.url}
+									alt={socialLink.link}
+									class="social-icon size-full object-contain group-hover:opacity-30"
+								/>
+							{/if}
+						</button>
 
-							<input type="text" name="link" class="input" bind:value={socialLink.link} />
-							<button
-								class="variant-ringed-error btn-icon p-2 hover:bg-red-900"
-								on:click={() => deleteSocialLink(socialLink.id)}
-							>
-								<DeleteIcon class="size-6" />
-							</button>
-						</li>
-					{/if}
+						<input
+							type="text"
+							name="link"
+							class="input"
+							bind:value={socialLink.link}
+							aria-invalid={$profileDetailErrors?.socialLinks?.[idx]?.link ? true : undefined}
+							title={$profileDetailErrors?.socialLinks?.[0]?.link?.[0] ?? 'link to social media'}
+						/>
+
+						<button
+							type="button"
+							class="variant-ringed-error btn-icon p-2 hover:bg-red-900"
+							on:click={() => deleteSocialLink(idx)}
+						>
+							<DeleteIcon class="size-6" />
+						</button>
+					</li>
 				{/each}
 			</ul>
 		</div>

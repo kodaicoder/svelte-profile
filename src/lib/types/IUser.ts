@@ -1,20 +1,10 @@
-import { Prisma } from '@prisma/client';
+import type { User, UserImage, Resume } from '@prisma/client';
+import type ISkill from './ISkill';
+import type ISocialLink from './ISocialLink';
 
-type IUser = Prisma.UserGetPayload<{
-	include: {
-		image: true;
-		resume: true;
-		socialLinks: {
-			include: {
-				image: true;
-			};
-		};
-		skills: {
-			include: {
-				image: true;
-			};
-		};
-	};
-}>;
-
-export type { IUser };
+export default interface IUser extends User {
+	image: UserImage;
+	resume: Resume;
+	skills: ISkill[];
+	socialLinks: ISocialLink[];
+}

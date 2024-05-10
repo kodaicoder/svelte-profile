@@ -4,8 +4,6 @@ import type { IMotto } from '$lib/types/IMotto';
 import { error } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ locals }: { locals: App.Locals }) => {
-	// console.log('GET ALL MOTTO', locals.user?.id);
-
 	let allMotto: IMotto[] | void = [];
 	if (!locals.user) {
 		return error(404, { message: 'User not found' });

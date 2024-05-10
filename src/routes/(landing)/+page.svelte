@@ -23,6 +23,7 @@
 	const userData = data.user;
 	const skillsData = data.skills;
 	const projects = data.projects;
+	const articles = data.articles;
 
 	const projectDatas: IShowCaseCard[] = projects.map((project) => ({
 		id: project.id, // assuming this is the correct field
@@ -33,57 +34,13 @@
 		link: project.link
 	}));
 
-	const articleDatas: IShowCaseCard[] = [
-		{
-			id: 1,
-			title: 'Article 1',
-			content: `lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.`,
-			images: [
-				'https://picsum.photos/400/300.webp?random=7',
-				'https://picsum.photos/400/300.webp?random=8'
-			],
-
-			link: 'https://dev.to/'
-		},
-		{
-			id: 2,
-			title: 'Article 2',
-			content: `lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.`,
-			images: [
-				'https://picsum.photos/400/300.webp?random=9',
-				'https://picsum.photos/400/300.webp?random=10'
-			],
-			link: 'https://dev.to/'
-		},
-		{
-			id: 3,
-			title: 'Article 3',
-			content: `lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.lorem ipsum dolor sit amet consectetur adipisicing elit. 
-			Cumque dolore aliquam, nihil odio.`,
-			images: [
-				'https://picsum.photos/400/300.webp?random=21',
-				'https://picsum.photos/400/300.webp?random=22'
-			],
-			link: 'https://dev.to/'
-		}
-	];
+	const articleDatas: IShowCaseCard[] = articles.map((article) => ({
+		id: article.id, // assuming this is the correct field
+		title: article.title,
+		content: article.content,
+		images: [article.image?.url],
+		link: article.link
+	}));
 </script>
 
 <section id="hero" class="relative flex h-dvh snap-start snap-always flex-col">

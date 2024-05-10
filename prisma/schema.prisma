@@ -38,11 +38,11 @@ model Article {
   user    User           @relation(fields: [userId], references: [id])
   title   String         @db.VarChar(255)
   content String
-  image  AritcleImage?
+  image  ArticleImage?
   link    String
 }
 
-model AritcleImage {
+model ArticleImage {
   id        Int     @id @default(autoincrement())
   url       String
   articleId Int @unique
@@ -123,7 +123,6 @@ model SocialLink {
   userId Int
   user   User     @relation(fields: [userId], references: [id])
   image SocialLinkImage?
-  type   String
   link   String
   isActive Boolean @default(true)
 }

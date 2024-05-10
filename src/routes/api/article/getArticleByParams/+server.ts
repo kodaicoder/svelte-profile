@@ -1,10 +1,10 @@
 import type { RequestHandler } from './$types';
-import type IProject from '$lib/types/IProject';
+import type IArticle from '$lib/types/IArticle';
 import prisma from '$lib/prismaInstance/prismaClient';
 import parseParams, { type IFilter, type ISort } from '$lib/helper/tabulatorParseParams';
 
 export const GET: RequestHandler = async ({ url, locals }: { url: URL; locals: App.Locals }) => {
-	let allProject: IProject[] | void = [];
+	let allArticle: IArticle[] | void = [];
 
 	const { skip, limit, sort, filter } = parseParams(url.searchParams);
 
@@ -18,7 +18,7 @@ export const GET: RequestHandler = async ({ url, locals }: { url: URL; locals: A
 		const totalRows = await getTotalRows();
 		if (totalRows > 0) {
 			const userId = locals.user.id;
-			allProject = await getByParams(+skip, +limit, sort, filter, +userId)
+			allArticle = await getByParams(+skip, +limit, sort, filter, +userId)
 				.then(async (data) => {
 					await prisma.$disconnect();
 					return data;
@@ -37,13 +37,13 @@ export const GET: RequestHandler = async ({ url, locals }: { url: URL; locals: A
 		JSON.stringify({
 			last_page,
 			last_row,
-			data: allProject
+			data: allArticle
 		})
 	);
 };
 
 async function getTotalRows() {
-	return await prisma.project.count();
+	return await prisma.article.count();
 }
 
 async function getByParams(
@@ -73,7 +73,7 @@ async function getByParams(
 		}, {});
 	}
 
-	return await prisma.project.findMany({
+	return await prisma.article.findMany({
 		where: {
 			user: {
 				id: userId,

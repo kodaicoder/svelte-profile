@@ -163,7 +163,7 @@
 		tabulatorTable = new Tabulator(tableDiv, {
 			layout: 'fitColumns',
 			height: 400,
-			rowHeight: 50,
+			rowHeight: 65,
 			selectable: false,
 			placeholder: 'Not found data',
 			pagination: true,
@@ -200,7 +200,7 @@
 					headerFilterPlaceholder: 'Search content',
 					resizable: false,
 					formatter: (cell) => {
-						cell.getElement().classList.add('!truncate', '!inline-block', '!leading-8');
+						cell.getElement().classList.add('!truncate', '!inline-block', '!leading-[3rem]');
 						return cell.getValue();
 					}
 				},

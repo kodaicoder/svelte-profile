@@ -13,14 +13,14 @@
 		<img
 			src={cardData.images[0]}
 			alt={cardData.title}
-			class="h-36 rounded-xl object-cover object-top md:h-[470px] md:w-[600px]"
+			class="h-36 rounded-xl object-cover object-top md:h-[380px] md:w-[500px]"
 			class:order-1={imagePosition == 'right' && !$isMobileStore}
 		/>
 	{/if}
 
 	<div class="flex w-full flex-1 flex-col gap-4 p-2">
 		<h2>{cardData.title}</h2>
-		<p class="max-h-[30vh] flex-1 overflow-auto md:max-h-[45vh]">
+		<p class="max-h-[30vh] flex-1 overflow-auto md:max-h-[40vh]">
 			{cardData.content}
 		</p>
 		<div class="mt-auto flex w-full items-center justify-between">

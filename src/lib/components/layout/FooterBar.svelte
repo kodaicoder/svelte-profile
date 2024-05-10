@@ -7,11 +7,30 @@
 	import { isMobileStore } from '$lib/stores/IsMobileStore';
 	import { isHamburgerMenuOpenStore } from '$lib/stores/IsHamburgerMenuOpenStore';
 
+	import { page } from '$app/stores';
+
 	$: if (!$isMobileStore) isHamburgerMenuOpenStore.set(false);
 
 	let windowWidth: number;
 
 	export let socialLinkList: ISocialLink[];
+
+	socialLinkList = [
+		...socialLinkList,
+		{
+			id: 0,
+			userId: $page.data.user.id,
+			type: 'EMAIL',
+			link: $page.data.user.email,
+			isActive: true,
+			image: {
+				id: 0,
+				url: 'https://0fcenei9aeidllgh.public.blob.vercel-storage.com/social/2/ic--baseline-email-145msE8P7595iiLv0OjoUz021Yjx4e.svg',
+				isActive: true,
+				socialLinkId: 0
+			}
+		}
+	];
 </script>
 
 <svelte:window bind:outerWidth={windowWidth} />

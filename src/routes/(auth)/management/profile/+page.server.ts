@@ -1,4 +1,4 @@
-import { fail, setError, superValidate } from 'sveltekit-superforms';
+import { fail, setError, superValidate, withFiles } from 'sveltekit-superforms';
 import type { PageServerLoad, Actions } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
 import {
@@ -9,7 +9,7 @@ import {
 import { lucia } from '$lib/service/auth';
 import { error, redirect } from '@sveltejs/kit';
 import axios from 'axios';
-import type { IUser } from '$lib/types/IUser';
+import type IUser from '$lib/types/IUser';
 import type { UserImage } from '@prisma/client';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -38,7 +38,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const profileDetailForm = await superValidate(restUserData, zod(profileDetailSchema));
 	const resumeFileForm = await superValidate(resume, zod(resumeFileSchema));
 
-	console.log(restUserData.skills);
+	// console.log(restUserData.skills);
 	return {
 		profilePictureForm,
 		profileDetailForm,
@@ -52,7 +52,7 @@ export const actions: Actions = {
 		const form = await superValidate(formData, zod(profilePictureSchema));
 
 		if (!form.valid) {
-			return fail(400, { form });
+			return fail(400, withFiles({ form }));
 		}
 
 		const image = formData.get('uploadImage') as File;
@@ -78,8 +78,39 @@ export const actions: Actions = {
 			});
 
 		form.data = { ...newProfilePicture, uploadImage: undefined };
-		return { form };
+		return withFiles({ form });
 	},
+	profileDetailUpdate: async ({ request }) => {
+		const formData = await request.formData();
+		const form = await superValidate(formData, zod(profileDetailSchema));
+
+		if (!form.valid) {
+			return fail(400, withFiles({ form }));
+		}
+
+		formData.append('data', JSON.stringify(form.data));
+
+		const updatedProfile = await axios
+			.post<Omit<IUser, 'image' | 'resume'>>('/api/users/updateProfile/', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+			.then((response) => {
+				return response.data;
+			})
+			.catch((err) => {
+				const { status, statusText, data } = err;
+				// console.log(err);
+				throw error(404, {
+					message: JSON.stringify({ status, statusText, data })
+				});
+			});
+
+		form.data = updatedProfile;
+		return withFiles({ form });
+	},
+
 	resumeUpload: async ({ request }) => {
 		const formData = await request.formData();
 		const form = await superValidate(formData, zod(resumeFileSchema));
@@ -111,6 +142,6 @@ export const actions: Actions = {
 			});
 
 		form.data = { ...newResume, uploadResume: undefined };
-		return { form };
+		return withFiles({ form });
 	}
 };

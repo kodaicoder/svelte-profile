@@ -12,6 +12,8 @@
 	import { Hamburger } from 'svelte-hamburgers';
 	import LogoutButton from '$lib/components/generic/LogoutButton.svelte';
 
+	import { page } from '$app/stores';
+
 	$: if (!$isMobileStore) isHamburgerMenuOpenStore.set(false);
 
 	let windowWidth: number;
@@ -19,6 +21,25 @@
 	export let menuList: IMenu[];
 	export let socialLinkList: ISocialLink[] = [];
 	export let isAuth: boolean = false;
+
+	if (socialLinkList.length > 0) {
+		socialLinkList = [
+			...socialLinkList,
+			{
+				id: 0,
+				userId: $page.data.user.id,
+				type: 'EMAIL',
+				link: $page.data.user.email,
+				isActive: true,
+				image: {
+					id: 0,
+					url: 'https://0fcenei9aeidllgh.public.blob.vercel-storage.com/social/2/ic--baseline-email-145msE8P7595iiLv0OjoUz021Yjx4e.svg',
+					isActive: true,
+					socialLinkId: 0
+				}
+			}
+		];
+	}
 </script>
 
 <svelte:window bind:outerWidth={windowWidth} />

@@ -41,7 +41,6 @@
 			validators: zod(schema),
 			invalidateAll: false,
 			onSubmit: () => {
-				console.log('submit');
 				buttonLoadState = true;
 			},
 			onUpdate: ({ form }) => {
@@ -216,7 +215,7 @@
 				</button>
 
 				<button
-					class="btn w-28 {parent.buttonNeutral}"
+					class="variant-ringed-error btn w-28 hover:bg-red-900"
 					on:click={() => handdleCloseModal()}
 					disabled={buttonLoadState}
 				>

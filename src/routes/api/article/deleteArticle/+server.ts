@@ -8,7 +8,7 @@ export const POST: RequestHandler = async ({ request }: { request: Request }) =>
 		return new Response(JSON.stringify({ message: 'User not found' }), { status: 404 });
 	}
 
-	const project = await dataAccess(+userId, +id)
+	const article = await dataAccess(+userId, +id)
 		.then(async (data) => {
 			await prisma.$disconnect();
 			return data;
@@ -18,21 +18,21 @@ export const POST: RequestHandler = async ({ request }: { request: Request }) =>
 			await prisma.$disconnect();
 		});
 
-	if (!project) {
+	if (!article) {
 		throw new Error('Project not found');
 	}
 
 	return new Response(
 		JSON.stringify({
-			id: project.id
+			id: article.id
 		})
 	);
 };
 
 async function dataAccess(userId: number, id: number) {
-	const oldImage = await prisma.projectImage.findFirst({
+	const oldImage = await prisma.articleImage.findFirst({
 		where: {
-			project: {
+			article: {
 				userId: userId,
 				id: id
 			}
@@ -43,7 +43,7 @@ async function dataAccess(userId: number, id: number) {
 	});
 	if (oldImage) await del(oldImage.url);
 
-	return await prisma.project.delete({
+	return await prisma.article.delete({
 		where: {
 			userId: userId,
 			id: id

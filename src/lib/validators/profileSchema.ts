@@ -21,6 +21,32 @@ export const profilePictureSchema = z.object({
 	uploadImage: uploadProfilePicture.optional()
 });
 
+const uploadSkillIconImage = z
+	.instanceof(File, {
+		message: 'Please choose your project image.'
+	})
+	.refine((file) => file.size < 500000, { message: 'File size must be less than 500 KB.' })
+	.refine(
+		(file) => {
+			const allowedExtensions = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+			return allowedExtensions.includes(file.type);
+		},
+		{ message: 'File type must be .jpg, .jpeg .png or .webp.' }
+	);
+
+const uploadSocialIconImage = z
+	.instanceof(File, {
+		message: 'Please choose your project image.'
+	})
+	.refine((file) => file.size < 500000, { message: 'File size must be less than 500 KB.' })
+	.refine(
+		(file) => {
+			const allowedExtensions = ['image/svg+xml'];
+			return allowedExtensions.includes(file.type);
+		},
+		{ message: 'File type must be .jpg, .jpeg .png or .webp.' }
+	);
+
 export const profileDetailSchema = z.object({
 	id: z.number().int().optional().nullable(),
 	firstName: z.string().min(1),
@@ -28,34 +54,20 @@ export const profileDetailSchema = z.object({
 	email: z.string().email(),
 	password: z.string().min(8),
 	role: z.string(),
-	// .enum(['USER', 'ADMIN']),
-	socialLinks: z.array(
-		z.object({
-			id: z.number().int().optional(),
-			userId: z.number().int().optional(),
-			image: z
-				.object({
-					id: z.number().int().optional().nullable(),
-					url: z.string().url(),
-					isActive: z.boolean().default(true),
-					socialLinkId: z.number().int().optional().nullable()
-				})
-				.optional()
-				.nullable(),
-			link: z.string().optional().nullable(),
-			type: z.string()
-			// enum(['GITHUB', 'FACEBOOK', 'TWITTER', 'INSTAGRAM', 'LINE', 'LINKEDIN'])
-		})
-	),
+
 	skills: z.array(
 		z.object({
-			id: z.number().int().optional(),
+			id: z.number().int(),
 			userId: z.number().int().optional().nullable(),
-			name: z.string().max(255),
+			name: z
+				.string()
+				.min(1, { message: 'please input skill name' })
+				.max(255, { message: 'skill name must be less than 255 characters' }),
 			level: z
 				.number()
 				.positive({ message: 'level value must be positive' })
 				.multipleOf(0.5, { message: 'Level must be a multiple of 0.5' }),
+			uploadImage: uploadSkillIconImage.optional().nullable(),
 			image: z
 				.object({
 					id: z.number().int().optional().nullable(),
@@ -67,6 +79,24 @@ export const profileDetailSchema = z.object({
 				.nullable(),
 
 			link: z.string().url().optional().nullable(),
+			isActive: z.boolean().default(true)
+		})
+	),
+	socialLinks: z.array(
+		z.object({
+			id: z.number().int(),
+			userId: z.number().int().optional(),
+			uploadImage: uploadSocialIconImage.optional().nullable(),
+			image: z
+				.object({
+					id: z.number().int().optional().nullable(),
+					url: z.string().url(),
+					isActive: z.boolean().default(true),
+					socialLinkId: z.number().int().optional().nullable()
+				})
+				.optional()
+				.nullable(),
+			link: z.string().min(1, { message: 'please input link to social media' }),
 			isActive: z.boolean().default(true)
 		})
 	)

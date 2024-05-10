@@ -2,6 +2,8 @@
 	import type IProject from '$lib/types/IProject';
 	import CreateButton from '$lib/components/generic/CreateButton.svelte';
 	import CreateModal from '$lib/components/generic/CreateModal.svelte';
+	import ImagePreviewButton from '$lib/components/generic/ImagePreviewButton.svelte';
+	import ImagePreviewModal from '$lib/components/generic/ImagePreviewModal.svelte';
 	import EditButton from '$lib/components/generic/EditButton.svelte';
 	import EditModal from '$lib/components/generic/EditModal.svelte';
 	import DeleteButton from '$lib/components/generic/DeleteButton.svelte';
@@ -187,7 +189,7 @@
 		tabulatorTable = new Tabulator(tableDiv, {
 			layout: 'fitData',
 			height: 400,
-			rowHeight: 50,
+			rowHeight: 65,
 			selectable: false,
 			placeholder: 'Not found data',
 			pagination: true,
@@ -203,14 +205,6 @@
 				filter: 'filter'
 			},
 			ajaxURL: `/api/project/getProjectByParams`,
-
-			// ajaxResponse: function (url, params, response) {
-			// 	//url - the URL of the request
-			// 	//params - the parameters passed with the request
-			// 	//response - the JSON object returned in the body of the response.
-			// 	console.log(response);
-			// 	return response.tableData; //return the tableData property of a response json object
-			// },
 			columns: [
 				{
 					title: 'Id',
@@ -223,16 +217,30 @@
 					resizable: false
 				},
 				{
+					title: 'Image',
+					field: 'image.url',
+					vertAlign: 'middle',
+					hozAlign: 'center',
+					headerHozAlign: 'center',
+					cssClass: 'flex justify-center gap-4',
+					headerSort: false,
+					resizable: false,
+					formatter: buildImageModal
+				},
+				{
 					title: 'Title',
 					field: 'title',
 					sorter: 'string',
 					vertAlign: 'middle',
+
 					headerHozAlign: 'center',
 					headerFilter: 'input',
 					headerFilterPlaceholder: 'Search title',
 					resizable: false,
 					formatter: (cell) => {
-						cell.getElement().classList.add('!truncate', '!inline-block', '!leading-8', '!w-44');
+						cell
+							.getElement()
+							.classList.add('!truncate', '!inline-block', '!leading-[3rem]', '!w-44');
 						return cell.getValue();
 					}
 				},
@@ -248,7 +256,7 @@
 					formatter: (cell) => {
 						cell
 							.getElement()
-							.classList.add('!truncate', '!inline-block', '!leading-8', '!max-w-[500px]');
+							.classList.add('!truncate', '!inline-block', '!leading-[3rem]', '!max-w-[500px]');
 						return cell.getValue();
 					}
 				},
@@ -264,7 +272,7 @@
 					formatter: (cell) => {
 						cell
 							.getElement()
-							.classList.add('!truncate', '!inline-block', '!leading-8', '!max-w-[500px]');
+							.classList.add('!truncate', '!inline-block', '!leading-[3rem]', '!max-w-[500px]');
 						return cell.getValue();
 					}
 				},
@@ -280,7 +288,7 @@
 					formatter: (cell) => {
 						cell
 							.getElement()
-							.classList.add('!truncate', '!inline-block', '!leading-8', '!max-w-[500px]');
+							.classList.add('!truncate', '!inline-block', '!leading-[3rem]', '!max-w-[500px]');
 						return cell.getValue();
 					}
 				},
@@ -314,7 +322,21 @@
 		await tabulatorTable.setData();
 		refreshState = false;
 	}
-
+	function buildImageModal(cell: CellComponent, formatterParams: any, onRendered: Function) {
+		return onRendered(function () {
+			new ImagePreviewButton({
+				target: cell.getElement(),
+				hydrate: true,
+				intro: true,
+				props: {
+					id: cell.getRow().getData().id,
+					table: tabulatorTable,
+					modalStore,
+					urlToImage: cell.getRow().getData().image.url
+				}
+			});
+		});
+	}
 	function buildActionsSection(cell: CellComponent, formatterParams: any, onRendered: Function) {
 		return onRendered(function () {
 			new EditButton({
@@ -366,6 +388,9 @@
 				typeOfData: typeOfDataDeleteProject,
 				schema: projectDeleteSchema
 			}
+		},
+		imagePreviewModal: {
+			ref: ImagePreviewModal
 		}
 	};
 </script>

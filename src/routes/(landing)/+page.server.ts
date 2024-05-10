@@ -5,19 +5,21 @@ import type { Resume, UserImage } from '@prisma/client';
 import type ISkill from '$lib/types/ISkill';
 import type ISocialLink from '$lib/types/ISocialLink';
 import type IProject from '$lib/types/IProject';
+import type IArticle from '$lib/types/IArticle';
 
 export const load = (async ({ locals }) => {
 	const user = locals.user;
 
-	const [imageUrl, skills, resumeUrl, socialLinks, projects] = await Promise.all([
+	const [imageUrl, skills, resumeUrl, socialLinks, projects, articles] = await Promise.all([
 		getProfilePicture(),
 		getSkills(),
 		getResumeUrl(),
 		getSocialLinks(),
-		getAllProject()
+		getAllProject(),
+		getAllArticle()
 	]);
 
-	return { user, imageUrl, skills, resumeUrl, socialLinks, projects };
+	return { user, imageUrl, skills, resumeUrl, socialLinks, projects, articles };
 }) satisfies PageServerLoad;
 
 async function getProfilePicture() {
@@ -83,6 +85,20 @@ async function getSocialLinks() {
 async function getAllProject() {
 	return await axios
 		.get<IProject[]>('/api/project/getAllProject/')
+		.then((response) => {
+			return response.data;
+		})
+		.catch((err) => {
+			const { status, statusText, data } = err;
+			throw error(404, {
+				message: JSON.stringify({ status, statusText, data })
+			});
+		});
+}
+
+async function getAllArticle() {
+	return await axios
+		.get<IArticle[]>('/api/article/getAllArticle/')
 		.then((response) => {
 			return response.data;
 		})

@@ -1,23 +1,23 @@
 <script lang="ts">
-	import EditIcon from './../../../../lib/components/icons/EditIcon.svelte';
-	import type { IMotto } from '$lib/types/IMotto';
-	import type { CustomModalSettings } from '$lib/types/IModal';
-	import CreateModal from '$lib/components/generic/motto/CreateModal.svelte';
-	import EditModal from '$lib/components/generic/motto/EditModal.svelte';
-	import DeleteModal from '$lib/components/generic/motto/DeleteModal.svelte';
+	import type IArticle from '$lib/types/IArticle';
+	import CreateButton from '$lib/components/generic/CreateButton.svelte';
+	import CreateModal from '$lib/components/generic/CreateModal.svelte';
+	import ImagePreviewButton from '$lib/components/generic/ImagePreviewButton.svelte';
+	import ImagePreviewModal from '$lib/components/generic/ImagePreviewModal.svelte';
+	import EditButton from '$lib/components/generic/EditButton.svelte';
+	import EditModal from '$lib/components/generic/EditModal.svelte';
+	import DeleteButton from '$lib/components/generic/DeleteButton.svelte';
+	import DeleteModal from '$lib/components/generic/DeleteModal.svelte';
+	import Spinner from '$lib/components/icons/Spinner.svelte';
 	import RefreshIcon from '$lib/components/icons/RefreshIcon.svelte';
 	import { TabulatorFull as Tabulator, type CellComponent } from 'tabulator-tables';
 	import { onMount } from 'svelte';
-	import EditButton from '$lib/components/generic/motto/EditButton.svelte';
-	import DeleteButton from '$lib/components/generic/motto/DeleteButton.svelte';
-	import Spinner from '$lib/components/icons/Spinner.svelte';
 	import { Modal, getModalStore, type ModalComponent } from '@skeletonlabs/skeleton';
 	import {
-		mottoCreateSchema,
-		mottoUpdateSchema,
-		mottoDeleteSchema
-	} from '$lib/validators/mottoSchema.js';
-	import CreateButton from '$lib/components/generic/CreateButton.svelte';
+		articleCreateSchema,
+		articleUpdateSchema,
+		articleDeleteSchema
+	} from '$lib/validators/articleSchema.js';
 
 	let tableDiv: string | HTMLElement;
 	let tabulatorTable: any;
@@ -25,17 +25,31 @@
 
 	const modalStore = getModalStore(); //passing modal store to action components
 
-	const typeOfDataCreateMotto = {} as IMotto;
-	const typeOfDataEditMotto = {} as IMotto;
-	const typeOfDataDeleteMotto = {} as IMotto;
+	const typeOfDataCreateArticle = {} as IArticle;
+	const typeOfDataEditArticle = {} as IArticle;
+	const typeOfDataDeleteArticle = {} as IArticle;
 
-	const createMottoMetaData = {
-		title: 'Create Motto',
+	const createArticleMetaData = {
+		title: 'Create Article',
 		form: {
-			name: 'createMotto',
+			name: 'createArticle',
 			method: 'POST',
-			action: './motto?/create',
+			action: './article?/create',
 			children: [
+				{
+					name: 'uploadImage',
+					element: 'input',
+					type: 'file',
+					label: 'Article Image',
+					accept: ['image/png', 'image/jpg', 'image/jpeg', 'image/webp'],
+					maxSize: 1000000
+				},
+				{
+					name: 'title',
+					element: 'input',
+					type: 'text',
+					label: 'Article Title'
+				},
 				{
 					name: 'content',
 					element: 'textarea',
@@ -43,10 +57,10 @@
 					label: 'Content'
 				},
 				{
-					name: 'author',
+					name: 'link',
 					element: 'input',
 					type: 'text',
-					label: 'Author name'
+					label: 'Link'
 				}
 			]
 		},
@@ -60,20 +74,20 @@
 		},
 		swal: {
 			success: {
-				title: 'Create motto success',
-				text: 'Motto data has been save successfully'
+				title: 'Create article success',
+				text: 'Article data has been save successfully'
 			},
 			error: {
-				title: 'Create motto failed'
+				title: 'Create article failed'
 			}
 		}
 	};
-	const editMottoMetaData = {
-		title: 'Edit Motto',
+	const editArticleMetaData = {
+		title: 'Edit Article',
 		form: {
-			name: 'editMotto',
+			name: 'editArticle',
 			method: 'POST',
-			action: './motto?/update',
+			action: './article?/update',
 			children: [
 				{
 					name: 'id',
@@ -81,16 +95,31 @@
 					type: 'hidden'
 				},
 				{
+					name: 'uploadImage',
+					element: 'input',
+					type: 'file',
+					label: 'Article Image',
+					accept: ['image/png', 'image/jpg', 'image/jpeg', 'image/webp'],
+					maxSize: 1000000
+				},
+				{
+					name: 'title',
+					element: 'input',
+					type: 'text',
+					label: 'Article Title'
+				},
+				{
 					name: 'content',
 					element: 'textarea',
 					type: 'textarea',
 					label: 'Content'
 				},
+
 				{
-					name: 'author',
+					name: 'link',
 					element: 'input',
 					type: 'text',
-					label: 'Author name'
+					label: 'Link'
 				}
 			]
 		},
@@ -104,20 +133,20 @@
 		},
 		swal: {
 			success: {
-				title: 'Update motto success',
-				text: 'Motto data has been save successfully'
+				title: 'Update article success',
+				text: 'Article data has been save successfully'
 			},
 			error: {
-				title: 'Update motto failed'
+				title: 'Update article failed'
 			}
 		}
 	};
-	const deleteMottoMetaData = {
-		title: 'Delete Motto',
+	const deleteArticleMetaData = {
+		title: 'Delete Article',
 		form: {
-			name: 'deleteMotto',
+			name: 'deleteArticle',
 			method: 'POST',
-			action: './motto?/delete',
+			action: './article?/delete',
 			children: [
 				{
 					name: 'id',
@@ -136,20 +165,20 @@
 		},
 		swal: {
 			success: {
-				title: 'Delete motto success',
-				text: 'Motto data has been remove successfully'
+				title: 'Delete article success',
+				text: 'Article data has been remove successfully'
 			},
 			error: {
-				title: 'Delete motto failed'
+				title: 'Article motto failed'
 			}
 		}
 	};
 
 	onMount(() => {
 		tabulatorTable = new Tabulator(tableDiv, {
-			layout: 'fitColumns',
+			layout: 'fitData',
 			height: 400,
-			rowHeight: 50,
+			rowHeight: 65,
 			selectable: false,
 			placeholder: 'Not found data',
 			pagination: true,
@@ -165,14 +194,6 @@
 				filter: 'filter'
 			},
 			ajaxURL: `/api/article/getArticleByParams`,
-
-			// ajaxResponse: function (url, params, response) {
-			// 	//url - the URL of the request
-			// 	//params - the parameters passed with the request
-			// 	//response - the JSON object returned in the body of the response.
-			// 	console.log(response);
-			// 	return response.tableData; //return the tableData property of a response json object
-			// },
 			columns: [
 				{
 					title: 'Id',
@@ -185,8 +206,35 @@
 					resizable: false
 				},
 				{
+					title: 'Image',
+					field: 'image.url',
+					vertAlign: 'middle',
+					hozAlign: 'center',
+					headerHozAlign: 'center',
+					cssClass: 'flex justify-center gap-4',
+					headerSort: false,
+					resizable: false,
+					formatter: buildImageModal
+				},
+				{
 					title: 'Title',
 					field: 'title',
+					sorter: 'string',
+					vertAlign: 'middle',
+					headerHozAlign: 'center',
+					headerFilter: 'input',
+					headerFilterPlaceholder: 'Search title',
+					resizable: false,
+					formatter: (cell) => {
+						cell
+							.getElement()
+							.classList.add('!truncate', '!inline-block', '!leading-[3rem]', '!w-44');
+						return cell.getValue();
+					}
+				},
+				{
+					title: 'Content',
+					field: 'content',
 					sorter: 'string',
 					vertAlign: 'middle',
 					headerHozAlign: 'center',
@@ -194,7 +242,9 @@
 					headerFilterPlaceholder: 'Search content',
 					resizable: false,
 					formatter: (cell) => {
-						cell.getElement().classList.add('!truncate', '!inline-block', '!leading-8');
+						cell
+							.getElement()
+							.classList.add('!truncate', '!inline-block', '!leading-[3rem]', '!max-w-[500px]');
 						return cell.getValue();
 					}
 				},
@@ -206,19 +256,14 @@
 					headerHozAlign: 'center',
 					headerFilter: 'input',
 					headerFilterPlaceholder: 'Search link',
-					resizable: false
+					resizable: false,
+					formatter: (cell) => {
+						cell
+							.getElement()
+							.classList.add('!truncate', '!inline-block', '!leading-[3rem]', '!max-w-[500px]');
+						return cell.getValue();
+					}
 				},
-				{
-					title: 'Content',
-					field: 'content',
-					sorter: 'string',
-					vertAlign: 'middle',
-					headerHozAlign: 'center',
-					headerFilter: 'input',
-					headerFilterPlaceholder: 'Search content',
-					resizable: false
-				},
-
 				{
 					title: ' ',
 					width: 100,
@@ -249,7 +294,21 @@
 		await tabulatorTable.setData();
 		refreshState = false;
 	}
-
+	function buildImageModal(cell: CellComponent, formatterParams: any, onRendered: Function) {
+		return onRendered(function () {
+			new ImagePreviewButton({
+				target: cell.getElement(),
+				hydrate: true,
+				intro: true,
+				props: {
+					id: cell.getRow().getData().id,
+					table: tabulatorTable,
+					modalStore,
+					urlToImage: cell.getRow().getData().image.url
+				}
+			});
+		});
+	}
 	function buildActionsSection(cell: CellComponent, formatterParams: any, onRendered: Function) {
 		return onRendered(function () {
 			new EditButton({
@@ -260,9 +319,9 @@
 					id: cell.getRow().getData().id,
 					table: tabulatorTable,
 					modalStore,
-					typeOfData: typeOfDataEditMotto,
-					meta: editMottoMetaData,
-					preFetchDataEndpoint: '/api/motto/getByMottoId'
+					typeOfData: typeOfDataEditArticle,
+					meta: editArticleMetaData,
+					preFetchDataEndpoint: '/api/article/getByArticleId'
 				}
 			});
 			new DeleteButton({
@@ -271,36 +330,38 @@
 					id: cell.getRow().getData().id,
 					table: tabulatorTable,
 					modalStore,
-					typeOfData: typeOfDataDeleteMotto,
-					meta: deleteMottoMetaData,
-					preFetchDataEndpoint: '/api/motto/getByMottoId'
+					typeOfData: typeOfDataDeleteArticle,
+					meta: deleteArticleMetaData,
+					preFetchDataEndpoint: '/api/article/getByArticleId'
 				}
 			});
 		});
 	}
 
 	const modalRegistry: Record<string, ModalComponent> = {
-		// props: { data: data.mottoEditForm }
 		createModal: {
 			ref: CreateModal,
 			props: {
-				typeOfData: typeOfDataCreateMotto,
-				schema: mottoCreateSchema
+				typeOfData: typeOfDataCreateArticle,
+				schema: articleCreateSchema
 			}
 		},
 		editModal: {
 			ref: EditModal,
 			props: {
-				typeOfData: typeOfDataEditMotto,
-				schema: mottoUpdateSchema
+				typeOfData: typeOfDataEditArticle,
+				schema: articleUpdateSchema
 			}
 		},
 		deleteModal: {
 			ref: DeleteModal,
 			props: {
-				typeOfData: typeOfDataDeleteMotto,
-				schema: mottoDeleteSchema
+				typeOfData: typeOfDataDeleteArticle,
+				schema: articleDeleteSchema
 			}
+		},
+		imagePreviewModal: {
+			ref: ImagePreviewModal
 		}
 	};
 </script>
@@ -313,8 +374,8 @@
 		<CreateButton
 			table={tabulatorTable}
 			{modalStore}
-			typeOfData={typeOfDataCreateMotto}
-			meta={createMottoMetaData}
+			typeOfData={typeOfDataCreateArticle}
+			meta={createArticleMetaData}
 		>
 			<span>New Article</span>
 		</CreateButton>

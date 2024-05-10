@@ -15,7 +15,7 @@ export const POST: RequestHandler = async ({
 		return error(404, { message: 'User not found' });
 	}
 
-	const project = await dataAccess(+locals.user.id, +id)
+	const article = await dataAccess(+locals.user.id, +id)
 		.then(async (data) => {
 			await prisma.$disconnect();
 			return data;
@@ -24,11 +24,11 @@ export const POST: RequestHandler = async ({
 			console.error(e);
 			await prisma.$disconnect();
 		});
-	return new Response(JSON.stringify(project));
+	return new Response(JSON.stringify(article));
 };
 
 async function dataAccess(userId: number, id: number) {
-	return await prisma.project.findFirst({
+	return await prisma.article.findFirst({
 		where: {
 			userId: userId,
 			id: id
