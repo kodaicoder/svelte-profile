@@ -161,16 +161,21 @@ const updateSkills = async (userId: number, skills: ISkill[]) => {
 				image: true
 			},
 			where: {
-				userId: userId,
-				id: {
-					notIn: skillToUpdate.map((skill) => skill.id)
-				}
+				userId: userId
 			}
 		})
 		.then(async (skills) => {
 			await Promise.all(
-				skills.map(async (skill) => {
-					if (skill.image) await del(skill.image.url);
+				skills.map(async (dbSkill) => {
+					skillToUpdate.forEach(async (skill) => {
+						if (dbSkill.image && skill.image) {
+							if (dbSkill.image.url == skill.image.url) {
+								return;
+							} else {
+								await del(dbSkill.image.url);
+							}
+						}
+					});
 				})
 			);
 		});
@@ -331,16 +336,21 @@ const updateSocialLinks = async (userId: number, socialLinks: ISocialLink[]) => 
 				image: true
 			},
 			where: {
-				userId: userId,
-				id: {
-					notIn: socialLinkToUpdate.map((socialLink) => socialLink.id)
-				}
+				userId: userId
 			}
 		})
 		.then(async (socialLinks) => {
 			await Promise.all(
-				socialLinks.map(async (socialLink) => {
-					if (socialLink.image) await del(socialLink.image.url);
+				socialLinks.map(async (dbSocialLink) => {
+					socialLinkToUpdate.forEach(async (socialLink) => {
+						if (dbSocialLink.image && socialLink.image) {
+							if (dbSocialLink.image.url == socialLink.image.url) {
+								return;
+							} else {
+								await del(dbSocialLink.image.url);
+							}
+						}
+					});
 				})
 			);
 		});
