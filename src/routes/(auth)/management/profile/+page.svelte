@@ -62,7 +62,7 @@
 		form: profileDetailForm,
 		enhance: profileDetailEnhance,
 		errors: profileDetailErrors,
-		validateForm: validateProfileDetailForm
+		reset: resetProfileDetailForm
 	} = superForm(data.profileDetailForm, {
 		dataType: 'json',
 		resetForm: false,
@@ -71,23 +71,13 @@
 		onSubmit: () => {
 			buttonLoadState = true;
 		},
-		onUpdate: ({ form }) => {
-			if (Object.keys(form.errors).length === 0) {
-				Swal.fire({
-					title: 'Update success',
-					text: 'Your new profile detail has been saved successfully',
-					icon: 'success',
-					confirmButtonText: 'Ok',
-					allowOutsideClick: false
-				})
-					.then(async () => {
-						// something handle success upload picture
-						//await invalidateAll();
-						buttonLoadState = false;
-					})
-					.catch((err) => {
-						console.log(err);
-					});
+		onUpdated: ({ form }) => {
+			if (form.valid) {
+				resetProfileDetailForm({ data: form.data });
+				buttonLoadState = false;
+				toast.success('Profile data update success!', {
+					className: '!bg-success-400'
+				});
 			} else {
 				buttonLoadState = false;
 			}
@@ -366,9 +356,18 @@
 		<div class="flex w-full flex-col px-2 md:max-w-3xl">
 			<div class="just flex items-center">
 				<h3 class=" self-start">Skill</h3>
-				<button type="button" class="variant-filled-success btn btn-sm ml-auto" on:click={addSkill}
-					>add skill</button
+				<button
+					type="button"
+					class="variant-filled-success btn btn-sm ml-auto"
+					on:click={addSkill}
+					disabled={buttonLoadState}
 				>
+					{#if buttonLoadState}
+						<Spinner class="h-6 w-6 text-surface-700" />
+					{:else}
+						add skill
+					{/if}
+				</button>
 			</div>
 			<ul class="mt-4 flex max-h-[400px] flex-col gap-4 overflow-auto">
 				{#each $profileDetailForm.skills as skill, idx (skill.id)}
@@ -465,8 +464,15 @@
 				<button
 					type="button"
 					class="variant-filled-success btn btn-sm ml-auto"
-					on:click={addSocialLink}>add social link</button
+					on:click={addSocialLink}
+					disabled={buttonLoadState}
 				>
+					{#if buttonLoadState}
+						<Spinner class="h-6 w-6 text-surface-700" />
+					{:else}
+						add social link
+					{/if}
+				</button>
 			</div>
 			<ul class="mt-4 flex max-h-[400px] flex-col gap-4 overflow-auto">
 				{#each $profileDetailForm.socialLinks as socialLink, idx (socialLink.id)}

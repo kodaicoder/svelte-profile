@@ -12,7 +12,7 @@
 
 <li>
 	<a
-		href={isEmail(socialLink.link) ? socialLink.link : 'mailto:' + socialLink.link}
+		href={isEmail(socialLink.link) ? 'mailto:' + socialLink.link : socialLink.link}
 		target="_blank"
 		rel="noopener noreferrer"
 		class="flex h-6 w-6 items-center justify-center"
